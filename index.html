@@ -131,7 +131,7 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .back-to-top:active{transform:scale(0.95)}
 /* ── MOBILE ── */
 @media(max-width:768px){
-  .hero{padding:5rem 1.25rem 3rem}
+  .hero{padding:5rem 1.25rem 3rem;min-height:92dvh}
   .hero-seal{right:-4rem;top:10%;width:180px}
   .chapter{padding:3rem 1rem}
   .chapter-body{font-size:1rem}
@@ -142,17 +142,88 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .char-card{min-width:140px;padding:0.75rem 1rem;margin:0.5rem 0.3rem 1.5rem 0}
   .char-card::after{bottom:-1.5rem;font-size:0.65rem}
   .feynman-blank{min-width:70px}
+  .feynman-sentence{flex-wrap:wrap}
   .timeline-bar{top:3rem;padding:0.4rem 0.75rem}
   .timeline-dot{width:36px;height:36px;font-size:0.7rem}
   .timeline-dot::after{font-size:0.5rem}
   .timeline-active-label{font-size:0.65rem;min-width:60px}
   .nav{padding:0 1rem;height:3rem}
+  .nav-logo{font-size:1rem}
   .menu-btn{display:block}
   .back-to-top{bottom:1rem;right:1rem;width:40px;height:40px}
+  .map-dot{font-size:0.65rem;padding:0.3rem 0.6rem}
+  .illustration-caption{font-size:0.65rem}
 }
+/* ── SMALL PHONES ── */
+@media(max-width:420px){
+  html{font-size:14px}
+  .hero{padding:4.5rem 1rem 2.5rem;min-height:90dvh}
+  .hero h1{font-size:clamp(1.8rem,8vw,2.5rem)}
+  .hero-sub{font-size:0.85rem;line-height:1.5}
+  .hero-cta{flex-direction:column;gap:0.5rem}
+  .cta-primary,.cta-secondary{padding:0.6rem 1rem;font-size:0.85rem;text-align:center}
+  .hero-seal{right:-3rem;top:5%;width:140px}
+  .chapter{padding:2rem 0.75rem}
+  .chapter-header{padding-left:0.6rem}
+  .chapter h2{font-size:clamp(1.2rem,5vw,1.5rem)}
+  .chapter-question{font-size:0.9rem;padding:0.6rem 0.75rem}
+  .chapter-body{font-size:0.9rem;line-height:1.7}
+  .chapter-num{font-size:2rem;top:1rem}
+  .key-facts{padding:0.75rem 1rem}
+  .key-facts li{font-size:0.8rem}
+  .char-card{min-width:100%;display:block;margin:0.5rem 0;padding:0.7rem 0.85rem}
+  .char-card .char-avatar{font-size:2rem}
+  .char-card .char-detail{font-size:0.75rem}
+  .feynman-quiz{padding:1.15rem;margin-top:1.5rem}
+  .feynman-quiz::before{left:1rem;font-size:1rem}
+  .feynman-blank{min-width:60px;font-size:0.8rem}
+  .feynman-check{font-size:0.75rem;padding:0.35rem 0.8rem}
+  .chapter-nav{flex-wrap:wrap;justify-content:center;gap:0.75rem}
+  .chapter-nav-btn{padding:0.5rem 0.75rem;font-size:0.75rem;flex:1 1 auto;justify-content:center}
+  .chapter-nav-center{order:-1;width:100%;font-size:0.7rem}
+  .timeline-bar{padding:0.3rem 0.5rem}
+  .timeline-dot{width:32px;height:32px;font-size:0.6rem}
+  .timeline-line{width:16px}
+  .map-section{padding:2.5rem 0.75rem}
+  .map-section h3{font-size:1.1rem}
+  .map-dot{font-size:0.6rem;padding:0.2rem 0.5rem}
+  .back-to-top{width:36px;height:36px;font-size:1rem;bottom:0.75rem;right:0.75rem}
+  .chapter-hero{max-height:28vh;border-radius:4px}
+  .chapter-illustration{max-height:220px}
+  .footer{padding:2rem 1rem;font-size:0.7rem}
+}
+/* ── TABLET ── */
+@media(min-width:421px) and (max-width:768px){
+  .hero{padding:5.5rem 1.5rem 3rem}
+  .hero h1{font-size:clamp(2rem,5vw,3.2rem)}
+  .char-card{min-width:calc(50% - 0.75rem)}
+  .cta-primary,.cta-secondary{padding:0.75rem 1.5rem}
+  .chapter{padding:3rem 1.25rem}
+  .chapter-nav{gap:1rem}
+}
+/* ── SMALL DESKTOP ── */
+@media(min-width:769px) and (max-width:1024px){
+  .hero{padding:6rem 2rem 4rem}
+  .chapter{padding:4rem 2rem;max-width:750px}
+  .chapter-body{max-width:60ch}
+  .map-section{padding:4rem 2rem;max-width:750px}
+  .char-card{min-width:180px}
+}
+/* ── LARGE DESKTOP ── */
 @media(min-width:1200px){
-  .chapter{padding:5rem 2rem}
+  .chapter{padding:5rem 2rem;max-width:1000px}
   .hero{padding:8rem 4rem 5rem}
+  .chapter-body{max-width:70ch;font-size:1.05rem}
+  .hero-content{max-width:750px}
+  .map-section{max-width:1000px}
+  .hero-seal{width:clamp(200px,25vw,450px)}
+}
+/* ── XL DESKTOP ── */
+@media(min-width:1600px){
+  html{font-size:17px}
+  .chapter{max-width:1100px;padding:6rem 2rem}
+  .hero{padding:8rem 6rem 5rem}
+  .map-section{max-width:1100px}
 }
 </style>
 </head>
