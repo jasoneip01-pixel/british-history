@@ -98,6 +98,11 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .feynman-result{display:none;font-size:0.8rem;margin-top:0.5rem;padding:0.5rem 0.75rem;border-radius:6px}
 .feynman-result.show{display:block}
 .feynman-result.correct{background:rgba(34,197,94,0.1);color:#15803d}
+/* ── CHAPTER IMAGES ── */
+.chapter-hero{width:100%;height:auto;max-height:50vh;object-fit:cover;border-radius:8px;margin-bottom:2rem;box-shadow:0 4px 20px rgba(0,0,0,0.08);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
+.chapter-hero.loaded{opacity:1;transform:translateY(0)}
+.chapter-illustration{display:block;max-width:100%;height:auto;max-height:400px;margin:1.5rem auto;border-radius:8px;box-shadow:0 3px 16px rgba(0,0,0,0.06)}
+.illustration-caption{text-align:center;font-size:0.75rem;color:var(--text-light);margin-top:0.5rem;font-style:italic}
 .feynman-result.partial{background:rgba(234,179,8,0.1);color:#a16207}
 /* ── MAP EVOLUTION ── */
 .map-section{position:relative;z-index:1;padding:4rem 1.5rem;max-width:900px;margin:0 auto}
@@ -130,6 +135,8 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .chapter-body{font-size:1rem}
   .chapter-num{font-size:2.5rem;top:1.5rem}
   .key-facts{padding:1rem}
+  .chapter-hero{max-height:35vh;border-radius:6px}
+  .chapter-illustration{max-height:280px}
   .char-card{min-width:140px;padding:0.75rem 1rem;margin:0.5rem 0.3rem 1.5rem 0}
   .char-card::after{bottom:-1.5rem;font-size:0.65rem}
   .feynman-blank{min-width:70px}
@@ -402,6 +409,9 @@ en: {
 
 let LANG = 'zh';
 let highestVisited = 1;
+const ILLUSTRATIONS = {1:'ch1-boudicca.jpg',2:'ch2-bath.jpg',3:'ch3-alfred.jpg',4:'ch4-domesday.jpg',5:'ch5-plague.jpg',6:'ch6-bosworth.jpg',7:'ch7-sixwives.jpg',8:'ch8-cromwell.jpg',9:'ch9-bill.jpg',10:'ch10-crystal.jpg',11:'ch11-spitfire.jpg',12:'ch12-brexit.jpg'};
+const ILLUS_CAPTIONS_ZH = {1:'布狄卡女王率军反抗罗马',2:'罗马巴斯浴场',3:'阿尔弗雷德大帝翻译手稿',4:'末日审判书编纂',5:'1348年黑死病时期的伦敦',6:'博斯沃思战役：理查三世坠马',7:'亨利八世的六位王后',8:'克伦威尔解散残余国会',9:'议会通过《权利法案》',10:'1851年水晶宫万国博览会',11:'不列颠之战：皇家空军升空',12:'2016年脱欧公投之夜'};
+const ILLUS_CAPTIONS_EN = {1:'Queen Boudicca leads the revolt against Rome',2:'The Roman Baths at Aquae Sulis',3:'King Alfred translates Latin manuscripts',4:'Compiling the Domesday Book',5:'London during the Black Death, 1348',6:'Bosworth Field: Richard III falls',7:'The Six Wives of Henry VIII',8:'Cromwell dismisses the Rump Parliament',9:'Parliament passes the Bill of Rights',10:'The Great Exhibition at Crystal Palace, 1851',11:'Battle of Britain: RAF Spitfires scramble',12:'Brexit referendum night, 2016'};
 const SHORT_LABELS_ZH = ['巨石与凯尔特','罗马不列颠','盎格鲁-维京','诺曼征服','大宪章','百年&玫瑰','都铎王朝','内战&共和','光荣革命','蒸汽&帝国','世界大战','现代英国'];
 const SHORT_LABELS_EN = ['Stonehenge','Roman Britain','Anglo-Saxons','1066 Conquest','Magna Carta','100 Yrs & Roses','The Tudors','Civil War','Glorious Rev.','Steam & Empire','World Wars','Modern UK'];
 const contentEl = document.getElementById('content');
@@ -467,6 +477,7 @@ function renderAll() {
       </div>` : '';
     html += `
       <section class="chapter" id="ch${ch.num}">
+        <img class="chapter-hero" src="img/headers/ch${ch.num}.jpg" alt="${ch.title}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
         <div class="chapter-num">${String(ch.num).padStart(2,'0')}</div>
         <div class="chapter-header">
           <div class="chapter-tag">${ch.tag}</div>
@@ -474,6 +485,8 @@ function renderAll() {
         </div>
         <div class="chapter-question">💡 ${ch.q}</div>
         <div class="chapter-body">${ch.body}</div>
+        <img class="chapter-illustration" src="img/illustrations/${ILLUSTRATIONS[ch.num]}" alt="${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}" loading="lazy" onerror="this.style.display='none'">
+        <div class="illustration-caption">${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}</div>
         ${factsHtml ? `<div class="key-facts"><h4>${LANG==='zh'?'关键节点':'Key Facts'}</h4><ul>${factsHtml}</ul></div>` : ''}
         ${charHtml}
         ${quizHtml}
