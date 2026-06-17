@@ -111,18 +111,35 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 /* ── FOOTER ── */
 .footer{text-align:center;padding:3rem 1.5rem;color:var(--text-light);font-size:0.8rem;border-top:1px solid rgba(184,148,58,0.1);position:relative;z-index:1}
 .footer strong{color:var(--navy);font-weight:600}
+/* ── CHAPTER NAV ── */
+.chapter-nav{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid rgba(184,148,58,0.15);gap:0.5rem}
+.chapter-nav-btn{display:inline-flex;align-items:center;gap:0.4rem;background:transparent;color:var(--navy);padding:0.5rem 1rem;border-radius:8px;border:1.5px solid var(--navy);font-size:0.8rem;cursor:pointer;font-weight:500;transition:all .2s;text-decoration:none;font-family:'Outfit','Noto Serif SC',sans-serif}
+.chapter-nav-btn:hover{background:var(--navy);color:var(--white)}
+.chapter-nav-btn.disabled{opacity:0.3;pointer-events:none;border-color:var(--stone);color:var(--stone)}
+.chapter-nav-center{font-size:0.75rem;color:var(--text-light);font-family:'Outfit',sans-serif;text-align:center}
+/* ── BACK TO TOP ── */
+.back-to-top{position:fixed;bottom:1.5rem;right:1.5rem;width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--white);border:none;font-size:1.2rem;cursor:pointer;z-index:1000;opacity:0;transform:translateY(1rem);transition:all .3s;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center}
+.back-to-top.show{opacity:1;transform:translateY(0)}
+.back-to-top:hover{background:var(--royal-red);transform:translateY(-2px)}
+.back-to-top:active{transform:scale(0.95)}
 /* ── MOBILE ── */
 @media(max-width:768px){
   .hero{padding:5rem 1.25rem 3rem}
   .hero-seal{right:-4rem;top:10%;width:180px}
   .chapter{padding:3rem 1rem}
+  .chapter-body{font-size:1rem}
   .chapter-num{font-size:2.5rem;top:1.5rem}
   .key-facts{padding:1rem}
-  .char-card{min-width:130px;padding:0.75rem 1rem}
-  .feynman-blank{min-width:80px}
-  .timeline-bar{top:3rem}
+  .char-card{min-width:140px;padding:0.75rem 1rem;margin:0.5rem 0.3rem 1.5rem 0}
+  .char-card::after{bottom:-1.5rem;font-size:0.65rem}
+  .feynman-blank{min-width:70px}
+  .timeline-bar{top:3rem;padding:0.4rem 0.75rem}
+  .timeline-dot{width:36px;height:36px;font-size:0.7rem}
+  .timeline-dot::after{font-size:0.5rem}
+  .timeline-active-label{font-size:0.65rem;min-width:60px}
   .nav{padding:0 1rem;height:3rem}
   .menu-btn{display:block}
+  .back-to-top{bottom:1rem;right:1rem;width:40px;height:40px}
 }
 @media(min-width:1200px){
   .chapter{padding:5rem 2rem}
@@ -131,6 +148,12 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 </style>
 </head>
 <body>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶部">↑</button>
 
 <!-- NAV -->
 <nav class="nav" id="nav">
@@ -142,31 +165,8 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 
 <!-- TIMELINE BAR -->
 <div class="timeline-bar" id="timelineBar">
-  <div class="timeline-inner" id="timelineInner">
-    <a href="#ch1" class="timeline-dot active" data-ch="1">1</a>
-    <div class="timeline-line"></div>
-    <a href="#ch2" class="timeline-dot" data-ch="2">2</a>
-    <div class="timeline-line"></div>
-    <a href="#ch3" class="timeline-dot" data-ch="3">3</a>
-    <div class="timeline-line"></div>
-    <a href="#ch4" class="timeline-dot" data-ch="4">4</a>
-    <div class="timeline-line"></div>
-    <a href="#ch5" class="timeline-dot" data-ch="5">5</a>
-    <div class="timeline-line"></div>
-    <a href="#ch6" class="timeline-dot" data-ch="6">6</a>
-    <div class="timeline-line"></div>
-    <a href="#ch7" class="timeline-dot" data-ch="7">7</a>
-    <div class="timeline-line"></div>
-    <a href="#ch8" class="timeline-dot" data-ch="8">8</a>
-    <div class="timeline-line"></div>
-    <a href="#ch9" class="timeline-dot" data-ch="9">9</a>
-    <div class="timeline-line"></div>
-    <a href="#ch10" class="timeline-dot" data-ch="10">10</a>
-    <div class="timeline-line"></div>
-    <a href="#ch11" class="timeline-dot" data-ch="11">11</a>
-    <div class="timeline-line"></div>
-    <a href="#ch12" class="timeline-dot" data-ch="12">12</a>
-  </div>
+  <div class="timeline-active-label" id="timelineActiveLabel">第1章</div>
+  <div class="timeline-inner" id="timelineInner"></div>
 </div>
 
 <!-- HERO -->
@@ -401,15 +401,49 @@ en: {
 };
 
 let LANG = 'zh';
+let highestVisited = 1;
+const SHORT_LABELS_ZH = ['巨石与凯尔特','罗马不列颠','盎格鲁-维京','诺曼征服','大宪章','百年&玫瑰','都铎王朝','内战&共和','光荣革命','蒸汽&帝国','世界大战','现代英国'];
+const SHORT_LABELS_EN = ['Stonehenge','Roman Britain','Anglo-Saxons','1066 Conquest','Magna Carta','100 Yrs & Roses','The Tudors','Civil War','Glorious Rev.','Steam & Empire','World Wars','Modern UK'];
 const contentEl = document.getElementById('content');
 const mapStage = document.getElementById('mapStage');
 const mapNav = document.getElementById('mapNav');
+const timelineInner = document.getElementById('timelineInner');
+const progressBar = document.getElementById('progressBar');
+const backToTopBtn = document.getElementById('backToTop');
+const activeLabel = document.getElementById('timelineActiveLabel');
 
 // ─── RENDER ────────────────────────────────
+function buildTimeline() {
+  const d = DATA[LANG];
+  const labels = LANG === 'zh' ? SHORT_LABELS_ZH : SHORT_LABELS_EN;
+  let html = '';
+  d.chapters.forEach((ch, i) => {
+    if (i > 0) html += '<div class="timeline-line"></div>';
+    html += `<a href="#ch${ch.num}" class="timeline-dot${i===0?' active':''}" data-ch="${ch.num}" data-label="${labels[i]}">${ch.num}</a>`;
+  });
+  timelineInner.innerHTML = html;
+  // Rebind click to mark visited
+  timelineInner.querySelectorAll('.timeline-dot').forEach(dot => {
+    dot.addEventListener('click', function() {
+      const ch = parseInt(this.dataset.ch);
+      if (ch > highestVisited) highestVisited = ch;
+      updateVisited();
+    });
+  });
+  updateVisited();
+  updateActiveLabel(1);
+}
+
 function renderAll() {
   const d = DATA[LANG];
   let html = '';
   d.chapters.forEach((ch, i) => {
+    const isFirst = i === 0;
+    const isLast = i === d.chapters.length - 1;
+    const prevLabel = LANG==='zh'?'← 上一章':'← Prev';
+    const nextLabel = LANG==='zh'?'下一章 →':'Next →';
+    const prevHref = isFirst ? '' : `href="#ch${ch.num-1}"`;
+    const nextHref = isLast ? '' : `href="#ch${ch.num+1}"`;
     const factsHtml = ch.facts ? ch.facts.map(f => `<li>${f}</li>`).join('') : '';
     const charHtml = ch.char ? `
       <div class="char-card" onclick="this.classList.toggle('flipped')">
@@ -443,16 +477,23 @@ function renderAll() {
         ${factsHtml ? `<div class="key-facts"><h4>${LANG==='zh'?'关键节点':'Key Facts'}</h4><ul>${factsHtml}</ul></div>` : ''}
         ${charHtml}
         ${quizHtml}
+        <div class="chapter-nav">
+          <a ${prevHref} class="chapter-nav-btn${isFirst?' disabled':''}" ${isFirst?'':'onclick="markVisited('+(ch.num-1)+')"'}>${prevLabel}</a>
+          <span class="chapter-nav-center">${ch.num} / ${d.chapters.length}</span>
+          <a ${nextHref} class="chapter-nav-btn${isLast?' disabled':''}" ${isLast?'':'onclick="markVisited('+(ch.num+1)+')"'}>${nextLabel}</a>
+        </div>
       </section>`;
   });
   contentEl.innerHTML = html;
+  buildTimeline();
 
   // Map
   mapNav.innerHTML = d.map.map((m, i) =>
     `<button class="map-dot${i===0?' active':''}" onclick="showMapStage(${i})">${m.label.split('\n')[0]}</button>`
   ).join('');
   showMapStage(0);
-  updateTimelineActive();
+  updateVisited();
+  updateProgress();
 }
 
 function showMapStage(idx) {
@@ -508,18 +549,48 @@ function checkQuiz(chNum) {
   }
 }
 
-// ─── TIMELINE ACTIVE TRACKING ───────────────
+// ─── TIMELINE & PROGRESS ───────────────────
+function markVisited(chNum) {
+  if (chNum > highestVisited) highestVisited = chNum;
+  updateVisited();
+}
+function updateVisited() {
+  document.querySelectorAll('.timeline-dot').forEach(d => {
+    const ch = parseInt(d.dataset.ch);
+    if (ch <= highestVisited) d.classList.add('visited');
+  });
+}
+function updateActiveLabel(chNum) {
+  const labels = LANG === 'zh' ? SHORT_LABELS_ZH : SHORT_LABELS_EN;
+  const isZh = LANG === 'zh';
+  activeLabel.textContent = isZh ? `第${chNum}章` : `Ch.${chNum}`;
+  activeLabel.classList.add('show');
+  document.querySelectorAll('.timeline-dot').forEach(d => d.classList.remove('active'));
+  const target = document.querySelector(`.timeline-dot[data-ch="${chNum}"]`);
+  if (target) target.classList.add('active');
+  markVisited(chNum);
+}
 function updateTimelineActive() {
-  const dots = document.querySelectorAll('.timeline-dot');
-  let activeCh = 1;
   const chapters = document.querySelectorAll('.chapter');
+  let activeCh = 1;
   chapters.forEach(ch => {
     const rect = ch.getBoundingClientRect();
-    if (rect.top < window.innerHeight/2) {
+    if (rect.top < window.innerHeight * 0.4) {
       activeCh = parseInt(ch.id.replace('ch',''));
     }
   });
-  dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.ch) === activeCh));
+  updateActiveLabel(activeCh);
+}
+function updateProgress() {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+  progressBar.style.width = progress + '%';
+  if (scrollTop > 400) {
+    backToTopBtn.classList.add('show');
+  } else {
+    backToTopBtn.classList.remove('show');
+  }
 }
 
 // ─── SCROLL ─────────────────────────────────
@@ -534,11 +605,13 @@ window.addEventListener('scroll', () => {
   }
   lastScroll = currentScroll;
   updateTimelineActive();
-});
+  updateProgress();
+}, {passive:true});
 
 // ─── INIT ───────────────────────────────────
 renderAll();
 updateTimelineActive();
+updateProgress();
 </script>
 </body>
 </html>
