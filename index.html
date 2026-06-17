@@ -489,6 +489,8 @@ en: {
 }
 };
 
+const RAW_BASE = 'https://raw.githubusercontent.com/jasoneip01-pixel/british-history/main';
+
 let LANG = 'zh';
 let highestVisited = 1;
 const ILLUSTRATIONS = {1:'ch1-boudicca.jpg',2:'ch2-bath.jpg',3:'ch3-alfred.jpg',4:'ch4-domesday.jpg',5:'ch5-plague.jpg',6:'ch6-bosworth.jpg',7:'ch7-sixwives.jpg',8:'ch8-cromwell.jpg',9:'ch9-bill.jpg',10:'ch10-crystal.jpg',11:'ch11-spitfire.jpg',12:'ch12-brexit.jpg'};
@@ -559,7 +561,7 @@ function renderAll() {
       </div>` : '';
     html += `
       <section class="chapter" id="ch${ch.num}">
-        <img class="chapter-hero" src="img/headers/ch${ch.num}.webp" alt="${ch.title}" width="1600" height="900" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+        <img class="chapter-hero" src="${RAW_BASE}/img/headers/ch${ch.num}.webp" alt="${ch.title}" width="1600" height="900" loading="lazy" onload="this.classList.add('loaded')" onerror="this.onerror=null;this.src='img/headers/ch${ch.num}.webp'">
         <div class="chapter-num">${String(ch.num).padStart(2,'0')}</div>
         <div class="chapter-header">
           <div class="chapter-tag">${ch.tag}</div>
@@ -567,7 +569,7 @@ function renderAll() {
         </div>
         <div class="chapter-question">💡 ${ch.q}</div>
         <div class="chapter-body">${ch.body}</div>
-        <img class="chapter-illustration" src="img/illustrations/${ILLUSTRATIONS[ch.num].replace('.jpg','.webp')}" alt="${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}" width="1200" height="900" loading="lazy" onerror="this.style.display='none'">
+        <img class="chapter-illustration" src="${RAW_BASE}/img/illustrations/${ILLUSTRATIONS[ch.num].replace('.jpg','.webp')}" alt="${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}" width="1200" height="900" loading="lazy" onerror="this.onerror=null;this.src='img/illustrations/'+ILLUSTRATIONS[ch.num].replace('.jpg','.webp')">
         <div class="illustration-caption">${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}</div>
         ${factsHtml ? `<div class="key-facts"><h4>${LANG==='zh'?'关键节点':'Key Facts'}</h4><ul>${factsHtml}</ul></div>` : ''}
         ${charHtml}
