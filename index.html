@@ -517,7 +517,7 @@ en: {
 
 const RAW_BASE = 'https://raw.githubusercontent.com/jasoneip01-pixel/british-history/main';
 
-let LANG = 'zh';
+let LANG = localStorage.getItem('britHistoryLang') || 'zh';
 let highestVisited = 1;
 const ILLUSTRATIONS = {1:'ch1-boudicca.jpg',2:'ch2-bath.jpg',3:'ch3-alfred.jpg',4:'ch4-domesday.jpg',5:'ch5-plague.jpg',6:'ch6-bosworth.jpg',7:'ch7-sixwives.jpg',8:'ch8-cromwell.jpg',9:'ch9-bill.jpg',10:'ch10-crystal.jpg',11:'ch11-spitfire.jpg',12:'ch12-brexit.jpg'};
 const ILLUS_CAPTIONS_ZH = {1:'布狄卡女王率军反抗罗马',2:'罗马巴斯浴场',3:'阿尔弗雷德大帝翻译手稿',4:'末日审判书编纂',5:'1348年黑死病时期的伦敦',6:'博斯沃思战役：理查三世坠马',7:'亨利八世的六位王后',8:'克伦威尔解散残余国会',9:'议会通过《权利法案》',10:'1851年水晶宫万国博览会',11:'不列颠之战：皇家空军升空',12:'2016年脱欧公投之夜'};
@@ -628,18 +628,16 @@ function showMapStage(idx) {
 
 function toggleLang() {
   LANG = LANG === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('britHistoryLang', LANG);
+  applyLang();
+  renderAll();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function applyLang() {
   document.getElementById('langToggle').textContent = LANG === 'zh' ? 'EN' : '中';
   document.querySelectorAll('[lang]').forEach(el => {
     el.style.display = el.getAttribute('lang') === LANG ? '' : 'none';
   });
-  const heroH1s = document.querySelectorAll('.hero h1');
-  heroH1s.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
-  const heroSubs = document.querySelectorAll('.hero-sub');
-  heroSubs.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
-  const heroCtas = document.querySelectorAll('.cta-primary');
-  heroCtas.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
-  renderAll();
-  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 // ─── QUIZ CHECK ─────────────────────────────
@@ -766,6 +764,7 @@ function updateFabLabel(chNum) {
 }
 
 // ─── INIT ───────────────────────────────────
+applyLang();
 renderAll();
 updateTimelineActive();
 updateProgress();
