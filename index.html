@@ -200,6 +200,30 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
   .chapter{padding:3rem 1.25rem}
   .chapter-nav{gap:1rem}
 }
+/* ── FLOATING DIR BUTTON ── */
+.nav-fab{position:fixed;bottom:1.5rem;right:1.5rem;z-index:900;display:flex;align-items:center;gap:0.5rem;background:var(--navy);color:var(--white);border:none;padding:0.65rem 1rem;border-radius:30px;font-size:0.85rem;cursor:pointer;transition:all .25s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 4px 16px rgba(27,42,74,0.2);font-family:var(--font-sans);font-weight:500;opacity:0;pointer-events:none;transform:translateY(10px)}
+.nav-fab.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.nav-fab:hover{background:var(--navy-light);transform:translateY(-2px);box-shadow:0 6px 20px rgba(27,42,74,0.3)}
+.nav-fab:active{transform:scale(0.95)}
+.nav-fab-icon{font-size:1.1rem}
+.nav-fab-label{white-space:nowrap}
+/* ── DIRECTORY OVERLAY PANEL ── */
+.dir-overlay{position:fixed;inset:0;z-index:990;background:rgba(0,0,0,0.3);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+.dir-overlay.show{opacity:1;pointer-events:auto}
+.dir-panel{position:fixed;bottom:0;left:0;right:0;z-index:991;background:var(--white);border-radius:20px 20px 0 0;max-height:75dvh;overflow-y:auto;padding:1.25rem 1.5rem 2rem;transform:translateY(100%);transition:transform .35s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 -8px 30px rgba(0,0,0,0.12)}
+.dir-panel.open{transform:translateY(0)}
+.dir-panel::before{content:'';display:block;width:40px;height:4px;background:var(--stone);border-radius:2px;margin:0 auto 1rem}
+.dir-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.dir-head h3{font-family:var(--font-display);font-size:1.1rem;color:var(--navy);font-weight:700}
+.dir-close{background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-light);padding:0.25rem;line-height:1}
+.dir-item{display:flex;align-items:center;gap:0.75rem;padding:0.65rem 0.75rem;border-radius:10px;cursor:pointer;transition:all .2s;text-decoration:none;margin-bottom:2px}
+.dir-item:hover{background:rgba(27,42,74,0.05)}
+.dir-item.active{background:rgba(184,148,58,0.12);font-weight:600}
+.dir-num{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--gold);min-width:1.8rem;text-align:center}
+.dir-item.active .dir-num{color:var(--royal-red)}
+.dir-title{flex:1;font-size:0.9rem;color:var(--text)}
+.dir-item.active .dir-title{color:var(--navy)}
+.dir-tag{font-size:0.7rem;color:var(--text-light);white-space:nowrap}
 /* ── SMALL DESKTOP ── */
 @media(min-width:769px) and (max-width:1024px){
   .hero{padding:6rem 2rem 4rem}
@@ -231,8 +255,13 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 <!-- PROGRESS BAR -->
 <div class="progress-bar" id="progressBar"></div>
 
-<!-- BACK TO TOP -->
-<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶部">↑</button>
+<!-- DIRECTORY FAB (replaces back-to-top) -->
+<div class="dir-overlay" id="dirOverlay" onclick="toggleDirPanel()"></div>
+<div class="dir-panel" id="dirPanel"></div>
+<button class="nav-fab" id="navFab" onclick="toggleDirPanel()">
+  <span class="nav-fab-icon">📖</span>
+  <span class="nav-fab-label" id="fabLabel">第1章/12</span>
+</button>
 
 <!-- NAV -->
 <nav class="nav" id="nav">
@@ -500,7 +529,6 @@ const mapStage = document.getElementById('mapStage');
 const mapNav = document.getElementById('mapNav');
 const timelineInner = document.getElementById('timelineInner');
 const progressBar = document.getElementById('progressBar');
-const backToTopBtn = document.getElementById('backToTop');
 const activeLabel = document.getElementById('timelineActiveLabel');
 
 // ─── RENDER ────────────────────────────────
@@ -588,6 +616,7 @@ function renderAll() {
   showMapStage(0);
   updateVisited();
   updateProgress();
+  buildDirPanel();
 }
 
 function showMapStage(idx) {
@@ -680,11 +709,7 @@ function updateProgress() {
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
   const progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
   progressBar.style.width = progress + '%';
-  if (scrollTop > 400) {
-    backToTopBtn.classList.add('show');
-  } else {
-    backToTopBtn.classList.remove('show');
-  }
+  document.getElementById('navFab').classList.toggle('show', scrollTop > 400);
 }
 
 // ─── SCROLL ─────────────────────────────────
@@ -700,12 +725,51 @@ window.addEventListener('scroll', () => {
   lastScroll = currentScroll;
   updateTimelineActive();
   updateProgress();
+  const activeCh = getActiveChapter();
+  updateFabLabel(activeCh);
 }, {passive:true});
+
+// ─── DIR PANEL ────────────────────────────────
+function toggleDirPanel() {
+  document.getElementById('dirPanel').classList.toggle('open');
+  document.getElementById('dirOverlay').classList.toggle('show');
+}
+function scrollToChapter(num) {
+  document.getElementById('ch'+num).scrollIntoView({behavior:'smooth'});
+  toggleDirPanel();
+}
+function buildDirPanel() {
+  const d = DATA[LANG];
+  const labels = LANG === 'zh' ? SHORT_LABELS_ZH : SHORT_LABELS_EN;
+  const panel = document.getElementById('dirPanel');
+  const cur = getActiveChapter();
+  panel.innerHTML = '<div class="dir-head"><h3>'+ (LANG==='zh'?'目录':'Chapters') +'</h3><button class="dir-close" onclick="toggleDirPanel()">✕</button></div>' +
+    d.chapters.map((ch, i) => {
+      const active = (i+1) === cur ? ' active' : '';
+      let tag = ch.tag;
+      if (tag && tag.length > 14) tag = tag.split('→')[0].trim();
+      return `<div class="dir-item${active}" onclick="scrollToChapter(${ch.num})"><span class="dir-num">${String(ch.num).padStart(2,'0')}</span><span class="dir-title">${labels[i]}</span><span class="dir-tag">${tag||''}</span></div>`;
+    }).join('');
+}
+function getActiveChapter() {
+  const chapters = document.querySelectorAll('.chapter');
+  let active = 1;
+  chapters.forEach(ch => {
+    const rect = ch.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.4) active = parseInt(ch.id.replace('ch',''));
+  });
+  return active;
+}
+function updateFabLabel(chNum) {
+  const isZh = LANG === 'zh';
+  document.getElementById('fabLabel').textContent = isZh ? `第${chNum}章` : `Ch.${chNum}`;
+}
 
 // ─── INIT ───────────────────────────────────
 renderAll();
 updateTimelineActive();
 updateProgress();
+buildDirPanel();
 </script>
 </body>
 </html>
