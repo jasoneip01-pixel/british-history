@@ -764,11 +764,18 @@ function updateFabLabel(chNum) {
 }
 
 // ─── INIT ───────────────────────────────────
-applyLang();
-renderAll();
-updateTimelineActive();
-updateProgress();
-buildDirPanel();
+try {
+  console.log('[BH] JS engine started');
+  if (!DATA || !DATA.zh || !DATA.en) throw new Error('DATA missing');
+  applyLang();
+  renderAll();
+  updateTimelineActive();
+  updateProgress();
+  buildDirPanel();
+} catch(e) {
+  console.error('[BH] init error:', e);
+  document.getElementById('content').innerHTML = '<div style="padding:2rem;color:#c00"><h3 style="margin-bottom:1rem">⚠️ 页面加载出错</h3><p style="margin-bottom:1rem">'+e.message+'</p><pre style="font-size:0.8rem;background:#f5f5f5;padding:1rem;border-radius:8px;overflow:auto">'+e.stack+'</pre></div>';
+}
 </script>
 </body>
 </html>
