@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>英国历史 · 费曼式交互课 | British History</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Noto+Serif+SC:wght@400;600;700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --parchment: #f5f0e8;
+  --parchment-dark: #e8dfcf;
+  --navy: #1B2A4A;
+  --navy-light: #2d4270;
+  --royal-red: #C41E3A;
+  --royal-red-dark: #9b1730;
+  --gold: #b8943a;
+  --gold-light: #d4b861;
+  --text: #1a1714;
+  --text-light: #5c5648;
+  --stone: #e8e3d8;
+  --white: #fafaf7;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Outfit','Noto Serif SC',sans-serif;background:var(--parchment);color:var(--text);line-height:1.7;overflow-x:hidden;background-image:radial-gradient(ellipse at 20% 50%,rgba(212,184,97,0.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(196,30,58,0.04) 0%,transparent 50%)}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='60' height='60' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.7}
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(245,240,232,0.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(184,148,58,0.2);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:3.5rem;transition:transform 0.3s}
+.nav.hidden{transform:translateY(-100%)}
+.nav-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.25rem;color:var(--navy);letter-spacing:-0.02em}
+.nav-logo span{color:var(--royal-red)}
+.nav-right{display:flex;align-items:center;gap:0.75rem}
+.lang-btn{background:var(--navy);color:var(--white);border:none;padding:0.4rem 0.9rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-weight:500;transition:all .2s;font-family:'Outfit',sans-serif}
+.lang-btn:hover{background:var(--navy-light)}
+.menu-btn{display:none;background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--navy);padding:0.25rem}
+/* ── HERO ── */
+.hero{position:relative;min-height:100dvh;display:flex;align-items:center;justify-content:flex-start;padding:6rem 2rem 4rem;overflow:hidden;z-index:1}
+.hero-content{max-width:680px;position:relative;z-index:2}
+.hero-tag{display:inline-block;background:var(--royal-red);color:var(--white);padding:0.3rem 1rem;border-radius:4px;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:1.5rem;font-family:'Outfit',sans-serif}
+.hero h1{font-family:'Playfair Display','Noto Serif SC',serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;color:var(--navy);margin-bottom:1rem;letter-spacing:-0.02em}
+.hero h1 em{font-style:italic;color:var(--royal-red)}
+.hero-sub{font-size:clamp(1rem,2vw,1.2rem);color:var(--text-light);max-width:480px;line-height:1.6;margin-bottom:2rem}
+.hero-cta{display:flex;gap:0.75rem;flex-wrap:wrap}
+.cta-primary{background:var(--navy);color:var(--white);padding:0.75rem 1.8rem;border-radius:8px;border:none;font-size:0.95rem;cursor:pointer;font-weight:600;transition:all .2s;text-decoration:none;font-family:'Outfit',sans-serif}
+.cta-primary:hover{background:var(--navy-light);transform:translateY(-1px)}
+.cta-secondary{background:transparent;color:var(--navy);padding:0.75rem 1.8rem;border-radius:8px;border:2px solid var(--navy);font-size:0.95rem;cursor:pointer;font-weight:600;transition:all .2s;text-decoration:none;font-family:'Outfit',sans-serif}
+.cta-secondary:hover{background:var(--navy);color:var(--white)}
+.hero-seal{position:absolute;right:-2rem;top:15%;width:clamp(200px,30vw,380px);opacity:0.15;pointer-events:none;z-index:0}
+/* ── TIMELINE NAV ── */
+.timeline-bar{position:sticky;top:3.5rem;z-index:100;background:rgba(245,240,232,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(184,148,58,0.2);padding:0.75rem 1rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.timeline-inner{display:flex;gap:0;min-width:max-content;align-items:center}
+.timeline-dot{flex-shrink:0;width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;cursor:pointer;transition:all .2s;background:var(--parchment);color:var(--navy);text-decoration:none;position:relative;z-index:1;font-family:'Outfit',sans-serif}
+.timeline-dot:hover,.timeline-dot.active{background:var(--royal-red);color:var(--white);border-color:var(--royal-red);transform:scale(1.15)}
+.timeline-line{flex-shrink:0;width:24px;height:1px;background:var(--gold);opacity:0.4}
+/* ── CHAPTER ── */
+.chapter{position:relative;z-index:1;padding:4rem 1.5rem;max-width:900px;margin:0 auto;border-bottom:1px solid rgba(184,148,58,0.1)}
+.chapter:last-child{border-bottom:none;padding-bottom:6rem}
+.chapter-num{font-family:'Playfair Display',serif;font-size:clamp(3rem,6vw,5rem);color:var(--royal-red);opacity:0.15;position:absolute;top:2rem;left:0;font-weight:900;line-height:1;pointer-events:none}
+.chapter-header{position:relative;margin-bottom:2rem;padding-left:1rem;border-left:3px solid var(--gold)}
+.chapter-tag{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--gold);font-weight:600;margin-bottom:0.5rem;font-family:'Outfit',sans-serif}
+.chapter h2{font-family:'Playfair Display','Noto Serif SC',serif;font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;color:var(--navy);letter-spacing:-0.01em}
+.chapter-question{font-size:1.05rem;color:var(--royal-red);font-weight:600;margin-bottom:1.5rem;padding:0.75rem 1rem;background:rgba(196,30,58,0.05);border-radius:6px;border-left:3px solid var(--royal-red)}
+.chapter-body{max-width:65ch;font-size:0.95rem;color:var(--text);line-height:1.85}
+.chapter-body p{margin-bottom:1rem}
+.chapter-body p:last-child{margin-bottom:0}
+/* ── KEY FACTS ── */
+.key-facts{background:rgba(27,42,74,0.03);border:1px solid rgba(27,42,74,0.08);border-radius:10px;padding:1.25rem 1.5rem;margin:1.5rem 0}
+.key-facts h4{font-family:'Playfair Display',serif;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--navy);margin-bottom:0.75rem;font-weight:600}
+.key-facts ul{list-style:none;display:grid;gap:0.35rem}
+.key-facts li{font-size:0.85rem;color:var(--text-light);padding-left:1.2rem;position:relative}
+.key-facts li::before{content:'◆';position:absolute;left:0;color:var(--gold);font-size:0.55rem;top:0.45rem}
+/* ── CHARACTER CARD ── */
+.char-card{display:inline-block;background:var(--white);border:1px solid rgba(184,148,58,0.2);border-radius:10px;padding:1rem 1.25rem;margin:0.75rem 0.5rem 0.75rem 0;cursor:pointer;transition:all .25s;perspective:600px;min-width:160px;text-align:center}
+.char-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.08)}
+.char-card:active{transform:scale(0.98)}
+.char-card .char-avatar{font-size:2.5rem;margin-bottom:0.5rem;display:block}
+.char-card .char-name{font-family:'Playfair Display',serif;font-weight:600;font-size:0.9rem;color:var(--navy)}
+.char-card .char-title{font-size:0.7rem;color:var(--text-light);margin-top:0.15rem}
+.char-card .char-detail{display:none;font-size:0.8rem;color:var(--text);margin-top:0.6rem;line-height:1.5;text-align:left}
+.char-card.flipped .char-detail{display:block}
+.char-card.flipped .char-name{color:var(--royal-red)}
+/* ── FEYNMAN QUIZ ── */
+.feynman-quiz{background:rgba(184,148,58,0.06);border:1px dashed var(--gold);border-radius:10px;padding:1.5rem;margin-top:2rem;position:relative}
+.feynman-quiz::before{content:'🔍';position:absolute;top:-0.8rem;left:1.5rem;font-size:1.2rem}
+.feynman-quiz h4{font-family:'Playfair Display',serif;font-size:0.9rem;color:var(--navy);margin-bottom:0.75rem;font-weight:600}
+.feynman-sentences{display:grid;gap:0.5rem;margin-bottom:1rem}
+.feynman-sentence{display:flex;align-items:center;gap:0.5rem;font-size:0.85rem}
+.feynman-blank{display:inline-block;min-width:120px;border-bottom:2px dashed var(--gold);padding:0.15rem 0.3rem;cursor:text;color:var(--text-light);transition:all .2s}
+.feynman-blank.filled{color:var(--navy);border-bottom-color:var(--navy);font-weight:500}
+.feynman-blank:focus{outline:none;border-bottom-color:var(--royal-red)}
+.feynman-blank::before{content:attr(data-hint);color:var(--stone);font-style:italic}
+.feynman-blank.filled::before{content:''}
+.feynman-check{display:inline-block;background:var(--navy);color:var(--white);border:none;padding:0.4rem 1rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-weight:500;font-family:'Outfit',sans-serif;transition:all .2s}
+.feynman-check:hover{background:var(--navy-light)}
+.feynman-check:active{transform:scale(0.98)}
+.feynman-result{display:none;font-size:0.8rem;margin-top:0.5rem;padding:0.5rem 0.75rem;border-radius:6px}
+.feynman-result.show{display:block}
+.feynman-result.correct{background:rgba(34,197,94,0.1);color:#15803d}
+.feynman-result.partial{background:rgba(234,179,8,0.1);color:#a16207}
+/* ── MAP EVOLUTION ── */
+.map-section{position:relative;z-index:1;padding:4rem 1.5rem;max-width:900px;margin:0 auto}
+.map-section h3{font-family:'Playfair Display','Noto Serif SC',serif;font-size:1.5rem;color:var(--navy);margin-bottom:1.5rem;font-weight:700}
+.map-container{position:relative;width:100%;aspect-ratio:16/10;background:rgba(27,42,74,0.03);border-radius:12px;overflow:hidden;border:1px solid rgba(184,148,58,0.15)}
+.map-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--text-light);transition:opacity 0.5s;opacity:0;pointer-events:none}
+.map-stage.active{opacity:1}
+.map-nav{display:flex;gap:0.5rem;margin-top:1rem;overflow-x:auto;padding-bottom:0.5rem}
+.map-dot{flex-shrink:0;padding:0.35rem 0.8rem;border-radius:20px;background:var(--stone);border:none;font-size:0.7rem;cursor:pointer;font-weight:500;transition:all .2s;white-space:nowrap;font-family:'Outfit',sans-serif;color:var(--text-light)}
+.map-dot.active,.map-dot:hover{background:var(--navy);color:var(--white)}
+/* ── FOOTER ── */
+.footer{text-align:center;padding:3rem 1.5rem;color:var(--text-light);font-size:0.8rem;border-top:1px solid rgba(184,148,58,0.1);position:relative;z-index:1}
+.footer strong{color:var(--navy);font-weight:600}
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .hero{padding:5rem 1.25rem 3rem}
+  .hero-seal{right:-4rem;top:10%;width:180px}
+  .chapter{padding:3rem 1rem}
+  .chapter-num{font-size:2.5rem;top:1.5rem}
+  .key-facts{padding:1rem}
+  .char-card{min-width:130px;padding:0.75rem 1rem}
+  .feynman-blank{min-width:80px}
+  .timeline-bar{top:3rem}
+  .nav{padding:0 1rem;height:3rem}
+  .menu-btn{display:block}
+}
+@media(min-width:1200px){
+  .chapter{padding:5rem 2rem}
+  .hero{padding:8rem 4rem 5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">Britannia<span>.</span></div>
+  <div class="nav-right">
+    <button class="lang-btn" id="langToggle" onclick="toggleLang()">EN</button>
+  </div>
+</nav>
+
+<!-- TIMELINE BAR -->
+<div class="timeline-bar" id="timelineBar">
+  <div class="timeline-inner" id="timelineInner">
+    <a href="#ch1" class="timeline-dot active" data-ch="1">1</a>
+    <div class="timeline-line"></div>
+    <a href="#ch2" class="timeline-dot" data-ch="2">2</a>
+    <div class="timeline-line"></div>
+    <a href="#ch3" class="timeline-dot" data-ch="3">3</a>
+    <div class="timeline-line"></div>
+    <a href="#ch4" class="timeline-dot" data-ch="4">4</a>
+    <div class="timeline-line"></div>
+    <a href="#ch5" class="timeline-dot" data-ch="5">5</a>
+    <div class="timeline-line"></div>
+    <a href="#ch6" class="timeline-dot" data-ch="6">6</a>
+    <div class="timeline-line"></div>
+    <a href="#ch7" class="timeline-dot" data-ch="7">7</a>
+    <div class="timeline-line"></div>
+    <a href="#ch8" class="timeline-dot" data-ch="8">8</a>
+    <div class="timeline-line"></div>
+    <a href="#ch9" class="timeline-dot" data-ch="9">9</a>
+    <div class="timeline-line"></div>
+    <a href="#ch10" class="timeline-dot" data-ch="10">10</a>
+    <div class="timeline-line"></div>
+    <a href="#ch11" class="timeline-dot" data-ch="11">11</a>
+    <div class="timeline-line"></div>
+    <a href="#ch12" class="timeline-dot" data-ch="12">12</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Feynman Method · Interactive History</div>
+    <h1 lang="zh">一块岛，<br>凭什么改变了<br><em>整个世界</em>？</h1>
+    <h1 lang="en" style="display:none">One Island.<br>How Did It Change<br><em>the Entire World</em>?</h1>
+    <p class="hero-sub" lang="zh">从巨石阵到脱欧公投，用费曼的方式——不是记住年代，是理解「为什么」。</p>
+    <p class="hero-sub" lang="en" style="display:none">From Stonehenge to Brexit — not memorizing dates, but understanding <em>why</em>.</p>
+    <div class="hero-cta">
+      <a href="#ch1" class="cta-primary" lang="zh">开始探索</a>
+      <a href="#ch1" class="cta-primary" lang="en" style="display:none">Start Exploring</a>
+    </div>
+  </div>
+  <svg class="hero-seal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="95" fill="none" stroke="#1B2A4A" stroke-width="3"/>
+    <circle cx="100" cy="100" r="85" fill="none" stroke="#1B2A4A" stroke-width="1"/>
+    <text x="100" y="75" text-anchor="middle" font-size="24" font-weight="900" fill="#1B2A4A" font-family="serif">DIEU</text>
+    <text x="100" y="95" text-anchor="middle" font-size="14" fill="#1B2A4A" font-family="serif">ET MON</text>
+    <text x="100" y="115" text-anchor="middle" font-size="16" font-weight="700" fill="#C41E3A" font-family="serif">DROIT</text>
+    <circle cx="100" cy="138" r="12" fill="none" stroke="#b8943a" stroke-width="1.5"/>
+    <text x="100" y="142" text-anchor="middle" font-size="9" fill="#b8943a" font-family="serif">🦁</text>
+  </svg>
+</section>
+
+<!-- CHAPTERS injected by JS -->
+<main id="content"></main>
+
+<!-- MAP EVOLUTION -->
+<section class="map-section" id="mapSection">
+  <h3 lang="zh">🗺️ 版图演化 · Territorial Evolution</h3>
+  <h3 lang="en" style="display:none">🗺️ Territorial Evolution</h3>
+  <div class="map-container" id="mapContainer">
+    <div class="map-stage active" id="mapStage"></div>
+  </div>
+  <div class="map-nav" id="mapNav"></div>
+</section>
+
+<footer class="footer">
+  <p lang="zh">用费曼的方式理解历史 —— 如果你不能简单地讲清楚，你就没有真正理解。&nbsp;&nbsp;<strong>Britannia</strong></p>
+  <p lang="en" style="display:none">Understand history the Feynman way — if you can't explain it simply, you don't really understand it.&nbsp;&nbsp;<strong>Britannia</strong></p>
+</footer>
+
+<script>
+// ─── i18n DATA ──────────────────────────────
+const DATA = {
+zh: {
+  chapters: [
+    {num:1,title:"巨石与凯尔特",tag:"史前→公元前55年",q:"英国最早的居民是谁？巨石阵是干什么的？",
+     body:`<p>在罗马人到来之前，不列颠岛上已经生活着人类超过80万年。但真正塑造了早期不列颠面目的，是公元前800年左右迁入的<strong>凯尔特人</strong>。</p><p>凯尔特人不是"一个民族"——他们是讲凯尔特语、共享相似文化的众多部落。他们带来了铁器、农耕技术和德鲁伊信仰。德鲁伊不是普通的祭司，他们是法官、医生、史官、天文学家——不列颠的精神支柱。</p><p>而巨石阵（Stonehenge）比凯尔特人早了两千年。公元前3000年到公元前2000年间建造，巨石来自240公里外的威尔士。没人确切知道它为什么而建——天文观测台？祭祀中心？治愈圣地？这正是它迷人的地方：<strong>英国最早的纪念碑，留给后世一个永远的问题</strong>。</p>`,
+     facts:["巨石阵始建于约公元前3000年","凯尔特人公元前800年左右迁入不列颠","德鲁伊兼具祭司、法官、医生、教师角色","凯尔特语至今仍存于威尔士、苏格兰、爱尔兰"],
+     quiz:["巨石阵建于约___年前","凯尔特人在约___年前迁入不列颠","德鲁伊不只是祭司，还兼任___、___和___"],
+     char:{name:"布狄卡",title:"爱西尼女王 · 公元60年反罗马起义领袖",detail:"她不是凯尔特神话人物，是有血有肉的战士女王。当罗马人鞭打她、侮辱她的女儿们之后，布狄卡联合多个部落，烧毁了罗马人在不列颠的三座主要城市——包括伦敦。虽然最终战败，她成为不列颠反抗精神的第一个象征。",emoji:"👸"},
+     qa:["公元前5000","公元前2800","法官、医生、天文学家"]
+    },
+    {num:2,title:"罗马不列颠",tag:"公元43–410年",q:"罗马人来了又走了，留下了什么？",
+     body:`<p>公元43年，罗马皇帝克劳狄乌斯派四万大军横渡英吉利海峡。凯尔特部落的马车和长矛，在罗马军团面前不堪一击。到公元84年，罗马人已经控制了今天的英格兰和威尔士全境。</p><p>但他们<strong>停在了哈德良长城</strong>。公元122年，哈德良皇帝下令修筑一道横贯不列颠北部的石墙——118公里，从东海岸到西海岸。这不是因为打不过苏格兰的皮克特人，是因为<strong>不值得</strong>。罗马帝国巨大，不列颠最北端的荒野，征服成本远超统治收益。</p><p>罗马人留下了什么？道路——笔直的军用大道，至今仍在使用。城市——伦敦（Londinium）、巴斯（Aquae Sulis）、约克（Eboracum）。拉丁语——英语中约30%的词汇源自拉丁。最重要的是一个观念：<strong>不列颠可以是一个有道路、有城市、有法律的文明之地</strong>。罗马人走后，不列颠人用了几百年才重新找回这种感觉。</p>`,
+     facts:["罗马入侵不列颠：公元43年","哈德良长城：公元122年修建，长118公里","罗马统治延续367年","伦敦（Londinium）为罗马人建立"],
+     quiz:["罗马人于公元___年入侵不列颠","哈德良长城长约___公里","罗马统治不列颠持续了约___年"],
+     char:{name:"哈德良",title:"罗马皇帝 · 公元117–138年在位",detail:"他不是征服者——他是筑墙者。哈德良明白帝国扩张的极限，选择用石头划定边界。118公里的长城不只是军事防线，更是文明与荒野之间的分界。两千年来，这道墙的遗迹仍然矗立，默默见证：有时候停下来的智慧，比继续进攻更深刻。",emoji:"🏛️"},
+     qa:["43","118","367"]
+    },
+    {num:3,title:"盎格鲁-撒克逊与维京",tag:"公元410–1066年",q:"英国的名字从哪来？",
+     body:`<p>罗马人一走，不列颠进入了最混乱也是最关键的600年。来自北欧日德兰半岛的<strong>盎格鲁人（Angles）、撒克逊人（Saxons）和朱特人（Jutes）</strong>潮水般涌入——不是一次入侵，是持续了百年的移民潮。</p><p>"英格兰"（England）这个名字就来自"盎格鲁人的土地"（Angle-land）。七个小王国——诺森布里亚、麦西亚、东盎格利亚、埃塞克斯、肯特、苏塞克斯、威塞克斯——被称为"七国时代"。他们是战士，也是讲故事的人：史诗《贝奥武夫》就诞生于这个时代。</p><p>然后维京人来了。公元793年，林迪斯法恩修道院被洗劫，震惊了整个基督教世界。接下来两百年，丹麦维京人几乎吞并了整个英格兰。唯一挡住他们的人是<strong>阿尔弗雷德大帝</strong>——威塞克斯国王，学者、战士、立法者。他不只是打赢了维京人，他还建立了英语教育体系，亲自翻译拉丁文著作。英国历史上第一个被称为"the Great"的国王，是整个民族的转折点。</p>`,
+     facts:["「英格兰」= Angle-land","七国时代：公元6–9世纪","维京入侵开始于公元793年（林迪斯法恩）","阿尔弗雷德大帝：公元871–899年在位"],
+     quiz:["「England」意为___的土地","维京人于公元___年开始入侵","唯一被称为「大帝」的英格兰国王是___"],
+     char:{name:"阿尔弗雷德大帝",title:"威塞克斯国王 · 871–899",detail:"他十四岁时去罗马朝圣，看到一个伟大地中海文明的可能性。回到不列颠后，他面对的是一片被维京人燃烧的焦土。他建立堡垒网、重组军队、创办学校、亲自翻译教皇格列高利的《牧灵规则》——他说，一个没有知识的王国，只是一片等待被风吹散的沙子。",emoji:"👑"},
+     qa:["盎格鲁人","793","阿尔弗雷德大帝"]
+    },
+    {num:4,title:"1066：诺曼征服",tag:"1066年",q:"一场战役怎么改变了一个国家的基因？",
+     body:`<p>1066年10月14日，黑斯廷斯。这一天改变了英语、法律、土地制度——改变了英国的一切。</p><p>忏悔者爱德华死后无嗣，三方争王：哈罗德·戈德温森（英格兰贵族）、哈拉尔·哈德拉达（挪威国王）、<strong>诺曼底公爵威廉</strong>。哈罗德先在北边击败了挪威人，然后急行军300公里南下，在黑斯廷斯面对威廉。一个士兵举盾的瞬间，一支箭射入哈罗德的眼睛——诺曼人赢了。</p><p>威廉带来了法语的宫廷、石头的城堡（伦敦塔在1078年动工）、封建土地制度。做了一项<strong>末日审判调查</strong>（Domesday Book，1086年）：全国每一寸土地、每一头猪、每一座磨坊都登记在册——国王第一次知道自己到底统治着什么。后果至今可见：英语中与政府、法律、饮食相关的词汇大多来自法语（government, justice, beef, pork），而农民的语言（cow, pig, sheep）保留着盎格鲁-撒克逊的根。</p>`,
+     facts:["黑斯廷斯战役：1066年10月14日","末日审判书（Domesday Book）：1086年","伦敦塔：1078年动工","英语中约29%词汇来自法语"],
+     quiz:["黑斯廷斯战役发生在___年","威廉征服后做了___调查，登记全国每一寸土地","英语中大量政府、法律词汇来自___语"],
+     char:{name:"征服者威廉",title:"诺曼底公爵 · 英格兰国王",detail:"私生子出身，七岁继承公爵爵位，一生都在证明自己配得上权力。1066年跨海征服不只是一个军事胜利——他用末日审判书把一个封建碎片化的岛变成了中央集权国家的原型。但他死得不太体面：下葬时，尸体因为太胖塞不进石棺，爆裂了。",emoji:"⚔️"},
+     qa:["1066","末日审判","法"]
+    },
+    {num:5,title:"金雀花与大宪章",tag:"1154–1485年",q:"凭什么一张羊皮纸能捆住国王？",
+     body:`<p>1215年6月15日，泰晤士河畔的兰尼米德草地。约翰王——英格兰历史上最不得人心的国王——在一张羊皮纸上盖了印。他肯定不觉得这是"伟大的自由宪章"，他只是想买时间。</p><p>为什么需要这张纸？约翰丢掉了金雀花王朝在法国的几乎所有领地（被称为"失地王"），又和教皇闹翻被绝罚，征税征到大贵族都受不了。40个男爵联合起来，逼他签字。<strong>大宪章（Magna Carta）63条核心含义就一句：国王也得守法。</strong></p><p>约翰一离开兰尼米德就反悔了——教皇宣布大宪章无效，内战继续。约翰第二年就死了。但大宪章没有死：他的儿子亨利三世重新颁布了好几次，到了13世纪末，它成了英格兰习惯法的一部分。四百年后，北美殖民者引用大宪章论证"无代表不纳税"；今天，它仍是英国宪法的基石之一。<strong>一张被撕毁过无数次的羊皮纸，成了法治的起点。</strong></p>`,
+     facts:["大宪章签署：1215年6月15日","约翰王被称为「失地王」（Lackland）","大宪章共63条","核心原则：国王也必须遵守法律"],
+     quiz:["大宪章于___年签署","签署地点在___河畔的兰尼米德","大宪章的核心原则是___也必须守法"],
+     char:{name:"约翰王",title:"英格兰国王 · 1199–1216",detail:"你可以不喜欢约翰王——几乎所有英国历史学家都不喜欢他。但他无意中做了一件所有好国王都做不到的事：用自己作为反面教材，催生了人类历史上第一份限制王权的宪章。坏国王的遗产，有时候比好国王更持久。",emoji:"📜"},
+     qa:["1215","泰晤士","国王"]
+    },
+    {num:6,title:"百年战争与玫瑰战争",tag:"1337–1485年",q:"打了100年的仗到底在争什么？",
+     body:`<p>1337年，英王爱德华三世宣称：法兰西王位是我的（他妈妈是法国公主）。法国人说：不行，萨利克法禁止母系继承。于是开打——打了116年。</p><p>1356年普瓦捷战役，英军以少胜多，甚至俘虏了法国国王。1415年阿金库尔战役，英军长弓手在泥泞中以5000人击溃了法军25000人。<strong>长弓不是新武器，但英国人把它变成了系统性的军事优势</strong>——一个训练有素的长弓手每分钟可以射出10-12支穿甲箭。但最终英国人还是输了：圣女贞德出现，法国民族意识觉醒，英国人被一步步赶回岛上。1453年战争结束时，英国在欧洲大陆只剩下加来。</p><p>内战接着内战。兰开斯特家族（红玫瑰）和约克家族（白玫瑰）因为王位归属撕破脸——玫瑰战争。30年里换了5个国王。最后，<strong>一个来自威尔士的名叫亨利·都铎的人结束了这一切</strong>：1485年博斯沃思战役，他杀死理查三世，戴上王冠，娶了约克家族的伊丽莎白，把红玫瑰和白玫瑰合为一朵——都铎玫瑰。英格兰最辉煌的王朝开始了。</p>`,
+     facts:["百年战争：1337–1453年（实际116年）","阿金库尔战役：1415年，英军长弓手以少胜多","玫瑰战争：1455–1485年","都铎王朝始于1485年博斯沃思战役"],
+     quiz:["百年战争实际打了___年","英军在___战役中以长弓手以少胜多","都铎王朝的建立者亨利·都铎在___年赢得博斯沃思战役"],
+     char:{name:"亨利五世",title:"英格兰国王 · 1413–1422",detail:"莎士比亚把他塑造成了完美的战士国王——他的「圣克里斯平日」演讲是英语文学中最动人的战前动员：「从今天到世界末日，我们将被铭记。」他确实被铭记了，但他35岁就死于痢疾，连法兰西王冠的滋味都没尝到。",emoji:"🏹"},
+     qa:["116","阿金库尔","1485"]
+    },
+    {num:7,title:"都铎王朝",tag:"1485–1603年",q:"一个离婚案怎么撕裂了整个基督教世界？",
+     body:`<p>亨利八世想要一个儿子。他的妻子阿拉贡的凯瑟琳为他生了六个孩子，五个夭折，活下来的只有一个女儿——玛丽。亨利觉得这是上帝的诅咒，要求教皇废除婚姻。</p><p>教皇不同意。不是道义问题——凯瑟琳的外甥是神圣罗马皇帝查理五世，教皇不敢得罪他。于是亨利做了一个在欧洲没人敢做的决定：<strong>脱离罗马天主教会，自建英国国教会，自己当最高首脑</strong>。1534年《至尊法案》通过，英国宗教改革不是始于神学辩论，而是始于一个国王的婚姻纠纷。</p><p>亨利一生娶了六个妻子——离婚、砍头、死、离婚、砍头、活——但只有一个儿子：爱德华六世，九岁即位，十五岁就死了。然后是大女儿<strong>玛丽一世</strong>——狂热的罗马天主教徒，下令烧死近300名新教徒，被历史称为「血腥玛丽」。然后是二女儿<strong>伊丽莎白一世</strong>，在位45年，击败西班牙无敌舰队，扶持莎士比亚，开启英国黄金时代——终身未婚，「嫁给英格兰」。</p>`,
+     facts:["亨利八世共六位妻子","1534年《至尊法案》脱离罗马教会","伊丽莎白一世在位45年（1558–1603）","1588年击败西班牙无敌舰队"],
+     quiz:["亨利八世因为想___而与罗马教会决裂","玛丽一世因迫害新教徒被称为「___」","伊丽莎白一世打败了___无敌舰队"],
+     char:{name:"伊丽莎白一世",title:"英格兰女王 · 1558–1603",detail:"她三岁时母亲被父亲砍了头，年轻时被姐姐关进伦敦塔。但她活下来了，而且统治了45年。她精通六种语言，用未婚身份在外交中左右逢源。她对军队说：「我有一颗国王的心。」1603年她去世时，英格兰从欧洲边缘的一个岛国变成了一个即将起飞的海上力量。",emoji:"👸"},
+     qa:["离婚（生儿子）","血腥玛丽","西班牙"]
+    },
+    {num:8,title:"内战与共和国",tag:"1642–1660年",q:"英国人凭什么敢砍国王的头？",
+     body:`<p>1649年1月30日，伦敦白厅宫外的断头台上，<strong>查理一世被公开处决</strong>。一个国王，被自己的议会审判，以"暴君、叛国者、谋杀者、国家公敌"的罪名斩首。这在欧洲君主制历史上是前所未闻的。</p><p>战争的根本原因是两个问题：国王能不能不经议会同意随意征税？国王有没有权决定国家的宗教归属？查理一世相信<strong>君权神授</strong>——国王只对上帝负责，不对人民负责。议会不这么想。</p><p>内战从1642年打到1649年。议会军的领袖<strong>奥利弗·克伦威尔</strong>——一个乡绅出身的清教徒，没有任何军事经验——组建了"新模范军"，纪律严明，战无不胜。查理一世被处死后，英国成了共和国（Commonwealth），克伦威尔成为护国公。但共和实验并不成功：克伦威尔越来越像他推翻的那个国王，他死后不到两年，君主制就复辟了。然而伤口留下来了：<strong>英国人从此知道，国王的脑袋不是不能碰的。</strong></p>`,
+     facts:["查理一世于1649年1月30日被处决","英国内战：1642–1651年","克伦威尔建立「新模范军」","君主制于1660年复辟"],
+     quiz:["查理一世于___年被处决","议会军的领袖是___","英国在处决国王后短暂成为___（共和国）"],
+     char:{name:"克伦威尔",title:"护国公 · 1653–1658",detail:"他既不是贵族也不是军人出身，却击败了国王的军队。他拒绝王冠，但住在王宫里。他以自由的名义砍了国王的头，然后以秩序的名义解散了议会。他是英国历史上最复杂的人物之一：推翻暴政的人，自己也成了暴君。1661年，复辟的君主制把他的尸体从坟墓里挖出来「处决」——头颅在威斯敏斯特教堂的尖顶上插了25年。",emoji:"💀"},
+     qa:["1649","克伦威尔","Commonwealth"]
+    },
+    {num:9,title:"光荣革命",tag:"1688–1689年",q:"不流血的革命凭什么更伟大？",
+     body:`<p>1688年，七位英国贵族写了一封信给荷兰的奥兰治亲王威廉——"带上你的军队来，我们帮你当国王。"</p><p>目标：詹姆士二世。这位国王在重蹈他父亲查理一世的覆辙：相信君权神授，公开信仰天主教，在英国这个已经改教去罗马天主教的国家里引起巨大恐慌。但这次英国人不想再砍国王的头了——他们受够了内战。于是他们<strong>换了一个国王</strong>。</p><p>威廉率军登陆，詹姆士二世逃往法国，整个过程几乎没流血。1689年，议会通过<strong>《权利法案》（Bill of Rights）</strong>：国王未经议会同意不得征税、不得废除法律、不得维持常备军。这不是一份建议——这是条件。威廉和玛丽接受王位的同时，接受了议会至上的原则。</p><p>光荣革命的意义不在"光荣"二字，而在于它建立了一个模式：<strong>权力的更替可以不用暴力，而用法律和制度。</strong>议会高于王权——这个原则从此再也没有被推翻过。后来美国的独立革命和法国的启蒙运动，都从1688年这里借了火。</p>`,
+     facts:["光荣革命：1688–1689年","《权利法案》通过于1689年","确立了议会至上的原则","几乎没有流血——故称「光荣」"],
+     quiz:["光荣革命发生在___年","1689年通过了《___》","光荣革命确立了___高于王权的原则"],
+     char:{name:"威廉三世",title:"奥兰治亲王 · 英格兰国王",detail:"他是荷兰人，被邀请来做英国国王——这件事本身就说明英国人对国王的态度已经变得多么务实。他矮小、驼背、哮喘，但他是当时欧洲最清醒的政治头脑之一：他用外交和联盟建立了一个遏制法国霸权的体系。光荣革命送给他王位，他送给英国议会至上的宪政秩序。",emoji:"🤝"},
+     qa:["1688","权利法案","议会"]
+    },
+    {num:10,title:"蒸汽与世界工厂",tag:"1760–1901年",q:"一个小岛怎么成了全球霸主？",
+     body:`<p>18世纪中叶，一系列看似不相干的发明在英国汇聚：珍妮纺纱机（哈格里夫斯，1764）、改良蒸汽机（瓦特，1769）、动力织布机（卡特赖特，1785）。每一条都不是英国独有的——但<strong>只有英国同时具备煤、铁、殖民地市场、相对开放的产权制度和一群不信邪的工程师。</strong></p><p>工业革命不只是一堆机器。它把一个以土地和农业为基础的社会变成以工厂和城市为基础的社会。曼彻斯特的人口在80年内从2万暴涨到40万。铁路在1830年代出现，电报在1840年代。到1851年万国博览会，英国已经是"世界工厂"——生产全球三分之二的煤炭、一半的铁和棉布。</p><p>而坐在这一切之上的，是<strong>维多利亚女王</strong>（1837–1901在位）。她不直接统治——君主权力此时已经大量转移到议会和首相手里——但她是这个时代的象征：纪律、道德、自信、全球扩张。在她治下，大英帝国覆盖了地球四分之一的陆地，"日不落帝国"名副其实。但阳光之下也有阴影：帝国繁荣建立在殖民地人民的劳动和牺牲之上。</p>`,
+     facts:["瓦特改良蒸汽机：1769年","维多利亚女王在位64年（1837–1901）","英国曾生产全球2/3的煤炭","大英帝国鼎盛时覆盖地球1/4陆地"],
+     quiz:["瓦特于___年改良蒸汽机","维多利亚女王在位___年","鼎盛时期的大英帝国被称为「___帝国」"],
+     char:{name:"维多利亚女王",title:"联合王国女王 · 1837–1901",detail:"她18岁即位，身材矮小（1.52米）却有钢铁般的意志。她嫁给了真爱阿尔伯特亲王，他死后穿了40年丧服。她统治的不是帝国——是整整一个时代。「维多利亚时代」这个词比她本人的名字更广为人知。但她也象征着一个悖论：最伟大的繁荣，和最深的不平等，同时出现在她的名义之下。",emoji:"🏭"},
+     qa:["1769","64","日不落"]
+    },
+    {num:11,title:"世界大战与帝国黄昏",tag:"1914–1945年",q:"赢了两次大战，为什么丢了帝国？",
+     body:`<p>1914年8月4日，英国对德国宣战。无数年轻人唱着歌走进欧洲的战壕，以为圣诞节前就能回家。四年后，近100万英国及帝国士兵阵亡。英国赢了战争，却失去了整整一代人。</p><p>二战更惨烈。1940年夏天，法国沦陷，英国独自面对希特勒。<strong>温斯顿·丘吉尔</strong>——一个此前被认为政治生涯已经终结的65岁老人——成了首相。他的演讲成了英国的精神武器：「我们将在海滩上战斗，在登陆场上战斗，在田野和街道上战斗，在山丘上战斗。我们决不投降。」不列颠之战中，皇家空军以少胜多，保住了英吉利海峡上的天空。但胜利的代价是帝国的终结。</p><p><strong>为什么赢了战争却丢了帝国？</strong>因为战争烧光了钱——英国欠了美国数十亿美元。因为殖民地人民在战争中为英国流血牺牲，战后他们的要求很简单：自由。印度在1947年独立，接下来的二十年里，英国从一个全球帝国缩回了欧洲边缘的岛国。丘吉尔自己说：「我当首相不是为了主持大英帝国的解体。」但他恰恰主持了。</p>`,
+     facts:["一战：1914–1918，英军阵亡约88万人","二战：1939–1945","不列颠之战：1940年夏秋","印度独立：1947年——帝国解体的开始"],
+     quiz:["二战期间，英国首相是___","英国在1940年独自面对德国的战役叫___","印度于___年独立，标志着大英帝国解体的开始"],
+     char:{name:"丘吉尔",title:"英国首相 · 1940–1945, 1951–1955",detail:"他不是一个被普遍热爱的人——他是个帝国主义者，反对印度独立，在加里波利战役中犯过灾难性的错误。但在1940年，当整个欧洲向希特勒屈服时，他的意志成了英国的防线。伦敦闪电战期间，他每晚只睡四小时，在地下指挥室里用雪茄和威士忌顶着。他输掉了帝国，但救了自由。诺贝尔文学奖得主——写历史和演讲的功力，比政治生涯更长。",emoji:"🎩"},
+     qa:["丘吉尔","不列颠之战","1947"]
+    },
+    {num:12,title:"现代英国",tag:"1945年至今",q:"帝国没了，英国是谁？",
+     body:`<p>1945年战争结束，英国人投票赶走了丘吉尔，选了工党。他们要的不只是和平——他们想要<strong>社会保障</strong>。1948年，国民健康服务（NHS）成立——"从摇篮到坟墓"的免费医疗。这是新英国的第一个基石。</p><p>接下来的七十年是一个持续追问的过程：我们是谁？1950年代的战后紧缩，1960年代的摇摆伦敦（The Beatles, The Rolling Stones），1970年代的经济衰退和罢工（电力每周只供应三天），1980年代的<strong>撒切尔革命</strong>——私有化、去工业化，煤矿工人罢工长达一年，北方工业城镇至今未恢复。1990年代的新工党、苏格兰权力下放、北爱尔兰和平进程。2016年的<strong>脱欧公投</strong>：52%对48%，英国决定离开欧盟。</p><p>脱欧是12个世纪以来的一个轮回：一个岛国，再次选择了"独自站立"。但今天的英国已经不是一个1840年的帝国，而是一个多元文化的社会、联合国安理会常任理事国、金融中心、文化输出大国。<strong>帝国没了，但英国人学会了用别的身份生活。</strong></p>`,
+     facts:["NHS（国民健康服务）成立于1948年","撒切尔夫人：1979–1990年任英国首位女首相","英国于2016年6月23日公投决定脱欧","苏格兰于1999年获得权力下放议会"],
+     quiz:["英国NHS成立于___年","英国第一位女首相是___","英国于___年通过公投决定脱欧"],
+     char:{name:"撒切尔夫人",title:"英国首相 · 1979–1990",detail:"杂货店老板的女儿，牛津化学系毕业，英国第一位女首相。自由市场、私有化、打击工会——她的政策分裂了整个国家。有人说她毁了英国的制造业和社区；有人说她救了一个正在被工会拖垮的经济。不管是爱是恨，没有人能否认：她把一个被称为「欧洲病夫」的国家重新放回了世界地图上。",emoji:"💼"},
+     qa:["1948","撒切尔夫人","2016"]
+    }
+  ],
+  map:[
+    {label:"凯尔特不列颠\n500 BC",desc:"众多凯尔特部落分散居住"},
+    {label:"罗马不列颠\n43–410 AD",desc:"城墙、道路、城市"},
+    {label:"七国时代\n6–9世纪",desc:"盎格鲁-撒克逊小王国"},
+    {label:"统一英格兰\n927 AD",desc:"埃塞尔斯坦统一盎格鲁-撒克逊王国"},
+    {label:"安茹帝国\n12世纪",desc:"金雀花王朝横跨英法"},
+    {label:"都铎英格兰\n16世纪",desc:"宗教改革、海上起步"},
+    {label:"大英帝国\n19世纪",desc:"日不落——覆盖地球1/4陆地"},
+    {label:"联合王国\n今天",desc:"英格兰+苏格兰+威尔士+北爱尔兰"}
+  ]
+},
+en: {
+  chapters: [
+    {num:1,title:"Stonehenge & Celts",tag:"Prehistory–55 BC",q:"Who lived here first, and what was Stonehenge for?",
+     body:`<p>Long before the Romans arrived, humans had been living on the British Isles for over 800,000 years. But the people who truly shaped early Britain were the <strong>Celts</strong>, who migrated from central Europe around 800 BC.</p><p>The Celts weren't a single nation—they were many tribes sharing a language family and culture. They brought ironworking, agriculture, and the Druidic religion. Druids were more than priests: they were judges, healers, historians, and astronomers—the spiritual backbone of Britain.</p><p>Stonehenge predates the Celts by two thousand years. Built between 3000 and 2000 BC, the giant stones were hauled from Wales, 240 kilometers away. No one knows exactly why—astronomical observatory? Ritual center? Healing sanctuary? That's the magic: <strong>Britain's first monument asks a question that still has no answer.</strong></p>`,
+     facts:["Stonehenge: begun ~3000 BC","Celts arrived ~800 BC","Druids served as priests, judges, doctors, teachers","Celtic languages survive in Wales, Scotland, Ireland"],
+     quiz:["Stonehenge was built around ___ years ago","The Celts arrived in Britain about ___ years ago","Druids were not just priests but also ___, ___, and ___"],
+     qa:["5,000","2,800","judges, doctors, teachers"]
+    },
+    {num:2,title:"Roman Britain",tag:"43–410 AD",q:"Rome came and went—what did it leave behind?",
+     body:`<p>In 43 AD, Emperor Claudius sent 40,000 soldiers across the English Channel. Celtic war chariots and spears were no match for Roman legions. By 84 AD, Rome controlled all of present-day England and Wales.</p><p>But they stopped at <strong>Hadrian's Wall</strong>. In 122 AD, Emperor Hadrian ordered a stone wall built across northern Britain—118 kilometers coast to coast. Not because they couldn't defeat the Picts, but because <strong>it wasn't worth it</strong>. The Roman Empire was vast, and the wild moors of northernmost Britain cost more to hold than they were worth.</p><p>What did Rome leave? Roads—straight military highways still in use today. Cities—London (Londinium), Bath (Aquae Sulis), York (Eboracum). Latin—about 30% of English vocabulary. And most importantly, an idea: <strong>that Britain could be a place of roads, cities, and law.</strong> After Rome fell, it took centuries for Britain to rediscover that feeling.</p>`,
+     facts:["Roman invasion: 43 AD","Hadrian's Wall: 122 AD, 118 km long","Roman rule lasted 367 years","Londinium founded by Romans"],
+     quiz:["Rome invaded Britain in ___ AD","Hadrian's Wall is about ___ km long","Roman rule in Britain lasted about ___ years"],
+     qa:["43","118","367"]
+    },
+    {num:3,title:"Anglo-Saxons & Vikings",tag:"410–1066 AD",q:"Where does the name 'England' come from?",
+     body:`<p>When Rome left, Britain entered its most chaotic—and most formative—600 years. From the Jutland peninsula came the <strong>Angles, Saxons, and Jutes</strong>—not in one invasion, but a century-long migration.</p><p>"England" literally means "Angle-land." Seven small kingdoms—Northumbria, Mercia, East Anglia, Essex, Kent, Sussex, Wessex—made up the Heptarchy. They were warriors, but also storytellers: the epic <em>Beowulf</em> was born in this age.</p><p>Then the Vikings came. In 793 AD, the monastery at Lindisfarne was sacked—a shock to all Christendom. For the next two centuries, Danish Vikings nearly swallowed England whole. The only one who stopped them was <strong>Alfred the Great</strong>—King of Wessex, scholar, warrior, lawgiver. He didn't just defeat the Vikings; he built an English education system, personally translating Latin works. The first ruler to be called "the Great" in English history.</p>`,
+     facts:["'England' = Angle-land","The Heptarchy: 6th–9th centuries","Viking raids began 793 AD (Lindisfarne)","Alfred the Great: reigned 871–899"],
+     quiz:["'England' means the land of the ___","The Vikings first attacked in ___ AD","The only English king called 'the Great' is ___"],
+     qa:["Angles","793","Alfred"]
+    },
+    {num:4,title:"1066: Norman Conquest",tag:"1066",q:"How did one battle change a nation's DNA?",
+     body:`<p>October 14, 1066. Hastings. One day that changed the English language, law, land ownership—everything.</p><p>Edward the Confessor died childless. Three men claimed the crown. Harold Godwinson raced north, defeated a Norwegian invasion, then force-marched 300 km south to face <strong>William, Duke of Normandy</strong>. At Hastings, an arrow struck Harold in the eye. The Normans won.</p><p>William brought French-speaking courts, stone castles, and the feudal system. He ordered the <strong>Domesday Book</strong> (1086)—a survey of every acre, every pig, every mill in England. For the first time, a king knew exactly what he ruled. The consequences are still visible: English words for government, law, and fine dining come from French. The peasants' words for animals—cow, pig, sheep—stayed Anglo-Saxon.</p>`,
+     facts:["Battle of Hastings: Oct 14, 1066","Domesday Book: 1086","Tower of London: begun 1078","~29% of English vocab from French"],
+     quiz:["The Battle of Hastings was in ___","William's great survey was called the ___ Book","Many English legal and government words come from ___"],
+     qa:["1066","Domesday","French"]
+    },
+    {num:5,title:"Plantagenets & Magna Carta",tag:"1154–1485",q:"How can a piece of parchment bind a king?",
+     body:`<p>June 15, 1215. Runnymede meadow by the Thames. King John—the most unpopular king in English history—pressed his seal onto parchment. He didn't think it was a "great charter of liberties." He was buying time.</p><p>Why was it needed? John had lost nearly all the Plantagenet lands in France (earning the nickname "Lackland"), quarreled with the Pope, and taxed his barons mercilessly. Forty barons united and forced his hand. The <strong>Magna Carta's 63 clauses boiled down to one idea: the king is not above the law.</strong></p><p>John repudiated it the moment he left Runnymede. The Pope declared it void. John died the next year. But the Charter survived: his son Henry III reissued it several times, and by the late 13th century it was part of English common law. Four centuries later, American colonists would cite it. <strong>A parchment torn up countless times became the foundation of the rule of law.</strong></p>`,
+     facts:["Signed: June 15, 1215","King John called 'Lackland'","63 clauses","Principle: even the king must follow the law"],
+     quiz:["Magna Carta was signed in ___","It was signed at a meadow called ___","Its core principle: the ___ must also obey the law"],
+     qa:["1215","Runnymede","king"]
+    },
+    {num:6,title:"Hundred Years' War & Wars of the Roses",tag:"1337–1485",q:"What was a 116-year war actually about?",
+     body:`<p>In 1337, Edward III claimed the French throne—his mother was a French princess. The French said no (Salic law banned female succession). So began a war that lasted 116 years.</p><p>At Crécy (1346) and Agincourt (1415), English longbowmen achieved astonishing victories against overwhelming numbers. The longbow wasn't new—but the English turned it into a <strong>systematic military advantage</strong>. A trained longbowman could fire 10-12 armor-piercing arrows per minute. But the French ultimately won: Joan of Arc appeared, French national consciousness awakened, and the English were pushed back. By 1453, they held only Calais.</p><p>Then came civil war. Lancaster (red rose) vs. York (white rose)—the Wars of the Roses. Five kings in 30 years. Finally, <strong>a Welshman named Henry Tudor</strong> ended it all: at Bosworth in 1485, he killed Richard III, took the crown, and married Elizabeth of York. Red rose and white rose became one—the Tudor Rose. England's greatest dynasty had begun.</p>`,
+     facts:["Hundred Years' War: 1337–1453 (116 years)","Agincourt: 1415, longbows vs knights","Wars of the Roses: 1455–1485","Tudor dynasty began 1485 at Bosworth"],
+     quiz:["The Hundred Years' War lasted ___ years","At the Battle of ___, English longbowmen defeated a much larger French army","The Tudor dynasty began in ___ at the Battle of Bosworth"],
+     qa:["116","Agincourt","1485"]
+    },
+    {num:7,title:"The Tudors",tag:"1485–1603",q:"How did a divorce tear apart Christendom?",
+     body:`<p>Henry VIII wanted a son. His wife Catherine of Aragon had six children—five died, only one daughter (Mary) survived. Henry believed it was a divine curse and demanded the Pope annul the marriage.</p><p>The Pope refused. Not on principle—Catherine's nephew was Charles V, Holy Roman Emperor, and the Pope feared him. So Henry did what no one in Europe dared: <strong>broke from Rome, founded the Church of England, and made himself its Supreme Head.</strong> The 1534 Act of Supremacy launched the English Reformation—which began not with theology, but with a king's marriage dispute.</p><p>Six wives: divorced, beheaded, died, divorced, beheaded, survived. Only one son survived him—Edward VI, king at nine, dead at fifteen. Then Mary I, a fervent Catholic who burned nearly 300 Protestants—"Bloody Mary." Then <strong>Elizabeth I</strong>, reigning 45 years, defeating the Spanish Armada, patronizing Shakespeare, launching England's Golden Age—never marrying, "wedded to England."</p>`,
+     facts:["Henry VIII: six wives","1534 Act of Supremacy broke from Rome","Elizabeth I reigned 45 years (1558–1603)","Spanish Armada defeated 1588"],
+     quiz:["Henry VIII broke from Rome because he wanted a ___","Mary I was called '___ Mary' for burning Protestants","Elizabeth I defeated the ___ Armada in 1588"],
+     qa:["divorce (a son)","Bloody","Spanish"]
+    },
+    {num:8,title:"Civil War & Republic",tag:"1642–1660",q:"How did England dare to execute its own king?",
+     body:`<p>January 30, 1649. Outside Whitehall Palace in London, <strong>Charles I was publicly executed</strong>. A king, tried by his own Parliament, condemned as "tyrant, traitor, murderer, and public enemy." Unprecedented in European monarchy.</p><p>Two questions drove the war: Can the king tax without Parliament's consent? Can the king dictate the nation's religion? Charles believed in <strong>the divine right of kings</strong>—a king answers only to God, not to his people. Parliament disagreed.</p><p>Civil war raged from 1642. Parliament's champion: <strong>Oliver Cromwell</strong>, a country gentleman and Puritan with zero military experience—who built the "New Model Army," disciplined and undefeated. After Charles's execution, Britain became a republic (Commonwealth), with Cromwell as Lord Protector. But the republican experiment failed: Cromwell became increasingly like the king he overthrew. Within two years of his death, the monarchy was restored. Yet the scar remained: <strong>the English now knew a king's head was not untouchable.</strong></p>`,
+     facts:["Charles I executed: Jan 30, 1649","English Civil War: 1642–1651","Cromwell's New Model Army","Monarchy restored: 1660"],
+     quiz:["Charles I was executed in ___","The leader of Parliament's army was ___","After the execution, England briefly became a ___ (republic)"],
+     qa:["1649","Cromwell","Commonwealth"]
+    },
+    {num:9,title:"The Glorious Revolution",tag:"1688–1689",q:"Why is a bloodless revolution greater than a bloody one?",
+     body:`<p>In 1688, seven English nobles wrote a letter to William of Orange in the Netherlands: "Bring your army—we'll make you king."</p><p>The target: James II. He was repeating his father Charles I's mistakes—divine right, open Catholicism in a country that now defined itself as Protestant. But this time, no one wanted to cut off another king's head. They'd had enough of civil war. So they <strong>swapped kings</strong>.</p><p>William landed, James fled to France, and almost no blood was shed. In 1689, Parliament passed the <strong>Bill of Rights</strong>: the king cannot tax without Parliament's consent, cannot suspend laws, cannot maintain a standing army in peacetime. These weren't suggestions—they were conditions. William and Mary accepted the throne <em>and</em> the principle of parliamentary supremacy.</p><p>The Glorious Revolution's brilliance wasn't "glory"—it was establishing a model: <strong>power can change hands through law and institutions, not violence.</strong> Parliament above the Crown—a principle never overturned since. The American and French revolutionaries both borrowed fire from 1688.</p>`,
+     facts:["Glorious Revolution: 1688–1689","Bill of Rights: 1689","Established parliamentary supremacy","Almost entirely bloodless"],
+     quiz:["The Glorious Revolution happened in ___","The ___ of Rights was passed in 1689","It established the principle of ___ above the Crown"],
+     qa:["1688","Bill","Parliament"]
+    },
+    {num:10,title:"Steam & World's Workshop",tag:"1760–1901",q:"How did a tiny island become a global superpower?",
+     body:`<p>In the mid-18th century, a series of seemingly unrelated inventions converged in Britain: the spinning jenny (Hargreaves, 1764), the improved steam engine (Watt, 1769), the power loom (Cartwright, 1785). None were uniquely British—but <strong>only Britain had coal, iron, colonial markets, relatively open property rights, and a culture of tinkering engineers.</strong></p><p>The Industrial Revolution wasn't just machines. It transformed a land-and-agriculture society into a factory-and-city one. Manchester's population exploded from 20,000 to 400,000 in 80 years. Railways arrived in the 1830s, telegraphs in the 1840s. By the Great Exhibition of 1851, Britain was the "workshop of the world"—producing two-thirds of global coal, half its iron and cotton.</p><p>Presiding over all this: <strong>Queen Victoria</strong> (1837–1901). She didn't directly rule—monarchical power had largely shifted to Parliament and prime ministers—but she embodied the era: discipline, morality, confidence, global expansion. Under her, the British Empire covered a quarter of Earth's land. "The empire on which the sun never sets." But the sun casts shadows: the empire's prosperity was built on colonial labor and sacrifice.</p>`,
+     facts:["Watt's steam engine: 1769","Victoria reigned 64 years (1837–1901)","Britain produced 2/3 of world's coal","British Empire covered 1/4 of Earth's land at peak"],
+     quiz:["Watt improved the steam engine in ___","Queen Victoria reigned for ___ years","At its peak, Britain was called 'the empire on which the ___ never sets'"],
+     qa:["1769","64","sun"]
+    },
+    {num:11,title:"World Wars & Imperial Twilight",tag:"1914–1945",q:"How did Britain win two wars and lose an empire?",
+     body:`<p>August 4, 1914. Britain declared war on Germany. Young men marched singing into the trenches of Europe, expecting to be home by Christmas. Four years later, nearly one million British and Empire soldiers were dead. Britain won—and lost an entire generation.</p><p>World War II was worse. In the summer of 1940, France fell, and Britain stood alone against Hitler. <strong>Winston Churchill</strong>—a 65-year-old man widely considered politically finished—became Prime Minister. His speeches became weapons: "We shall fight on the beaches, on the landing grounds, in the fields and in the streets, in the hills. We shall never surrender." In the Battle of Britain, the RAF held the skies against the odds. But victory came at the cost of empire.</p><p><strong>How did Britain win the war and lose the empire?</strong> Because war burned through money—Britain owed billions to America. Because colonial people had bled for Britain, and after the war their demand was simple: freedom. India became independent in 1947. Over the next twenty years, Britain shrank from a global empire back to a European island. Churchill himself said: "I did not become the King's First Minister to preside over the liquidation of the British Empire." But that is exactly what he presided over.</p>`,
+     facts:["WWI: 1914–1918, ~880,000 British dead","WWII: 1939–1945","Battle of Britain: summer–autumn 1940","Indian independence: 1947"],
+     quiz:["Britain's WWII Prime Minister was ___","The 1940 air battle was called the Battle of ___","India became independent in ___, beginning the end of the Empire"],
+     qa:["Churchill","Britain","1947"]
+    },
+    {num:12,title:"Modern Britain",tag:"1945–Present",q:"Empire gone—who is Britain now?",
+     body:`<p>In 1945, Britons voted Churchill out and Labour in. They wanted more than peace—they wanted <strong>security</strong>. In 1948, the National Health Service (NHS) was born: free healthcare "from cradle to grave." A new Britain's first building block.</p><p>The next seventy years were one long identity crisis. 1950s austerity. 1960s Swinging London (The Beatles, The Rolling Stones). 1970s economic decline and strikes. 1980s <strong>Thatcher revolution</strong>: privatization, deindustrialization, a year-long miners' strike that hollowed out northern industrial towns. 1990s New Labour, Scottish devolution, Northern Ireland peace. 2016: <strong>Brexit</strong>. 52% to 48%—the UK voted to leave the European Union.</p><p>Brexit closed a twelve-century loop: an island nation, choosing once again to "stand alone." But today's Britain is no empire. It's a multicultural society, a UN Security Council permanent member, a financial hub, a cultural superpower. <strong>The empire is gone, but the British have learned to live under a different identity.</strong></p>`,
+     facts:["NHS founded 1948","Margaret Thatcher: UK's first female PM (1979–1990)","Brexit referendum: June 23, 2016","Scotland gained devolved parliament 1999"],
+     quiz:["The NHS was founded in ___","Britain's first female Prime Minister was ___","The UK voted to leave the EU in ___"],
+     qa:["1948","Margaret Thatcher","2016"]
+    }
+  ],
+  map:[
+    {label:"Celtic Britain\n500 BC",desc:"Scattered Celtic tribes"},
+    {label:"Roman Britain\n43–410 AD",desc:"Walls, roads, cities"},
+    {label:"The Heptarchy\n6th–9th C",desc:"Anglo-Saxon kingdoms"},
+    {label:"Kingdom of England\n927 AD",desc:"Æthelstan unites the Saxons"},
+    {label:"Angevin Empire\n12th C",desc:"Plantagenets rule England & half of France"},
+    {label:"Tudor England\n16th C",desc:"Reformation, naval beginnings"},
+    {label:"British Empire\n19th C",desc:"The sun never sets — 1/4 of Earth"},
+    {label:"United Kingdom\nToday",desc:"England + Scotland + Wales + N. Ireland"}
+  ]
+}
+};
+
+let LANG = 'zh';
+const contentEl = document.getElementById('content');
+const mapStage = document.getElementById('mapStage');
+const mapNav = document.getElementById('mapNav');
+
+// ─── RENDER ────────────────────────────────
+function renderAll() {
+  const d = DATA[LANG];
+  let html = '';
+  d.chapters.forEach((ch, i) => {
+    const factsHtml = ch.facts ? ch.facts.map(f => `<li>${f}</li>`).join('') : '';
+    const charHtml = ch.char ? `
+      <div class="char-card" onclick="this.classList.toggle('flipped')">
+        <span class="char-avatar">${ch.char.emoji||'👤'}</span>
+        <div class="char-name">${ch.char.name}</div>
+        <div class="char-title">${ch.char.title}</div>
+        <div class="char-detail">${ch.char.detail}</div>
+      </div>` : '';
+    const quizHtml = ch.quiz ? `
+      <div class="feynman-quiz" id="quiz${ch.num}">
+        <h4>${LANG==='zh'?'费曼自检 · 用三句话讲给同桌听':'Feynman Check · Explain to a friend in 3 sentences'}</h4>
+        <div class="feynman-sentences">${
+          ch.quiz.map((s, si) => `
+            <div class="feynman-sentence">
+              <span>${si+1}.</span>
+              <span class="feynman-blank" data-hint="[${LANG==='zh'?'点击填写':'click to fill'}]" contenteditable="true" data-ch="${ch.num}" data-si="${si}"></span>
+            </div>`).join('')
+        }</div>
+        <button class="feynman-check" onclick="checkQuiz(${ch.num})">${LANG==='zh'?'检查答案':'Check Answers'}</button>
+        <div class="feynman-result" id="result${ch.num}"></div>
+      </div>` : '';
+    html += `
+      <section class="chapter" id="ch${ch.num}">
+        <div class="chapter-num">${String(ch.num).padStart(2,'0')}</div>
+        <div class="chapter-header">
+          <div class="chapter-tag">${ch.tag}</div>
+          <h2>${ch.title}</h2>
+        </div>
+        <div class="chapter-question">💡 ${ch.q}</div>
+        <div class="chapter-body">${ch.body}</div>
+        ${factsHtml ? `<div class="key-facts"><h4>${LANG==='zh'?'关键节点':'Key Facts'}</h4><ul>${factsHtml}</ul></div>` : ''}
+        ${charHtml}
+        ${quizHtml}
+      </section>`;
+  });
+  contentEl.innerHTML = html;
+
+  // Map
+  mapNav.innerHTML = d.map.map((m, i) =>
+    `<button class="map-dot${i===0?' active':''}" onclick="showMapStage(${i})">${m.label.split('\n')[0]}</button>`
+  ).join('');
+  showMapStage(0);
+  updateTimelineActive();
+}
+
+function showMapStage(idx) {
+  const d = DATA[LANG];
+  mapStage.innerHTML = `<div style="text-align:center;padding:2rem"><div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--navy);margin-bottom:0.5rem;white-space:pre-line">${d.map[idx].label}</div><div style="color:var(--text-light);font-size:0.85rem">${d.map[idx].desc}</div></div>`;
+  mapStage.className = 'map-stage active';
+  mapNav.querySelectorAll('.map-dot').forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+
+function toggleLang() {
+  LANG = LANG === 'zh' ? 'en' : 'zh';
+  document.getElementById('langToggle').textContent = LANG === 'zh' ? 'EN' : '中';
+  document.querySelectorAll('[lang]').forEach(el => {
+    el.style.display = el.getAttribute('lang') === LANG ? '' : 'none';
+  });
+  const heroH1s = document.querySelectorAll('.hero h1');
+  heroH1s.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
+  const heroSubs = document.querySelectorAll('.hero-sub');
+  heroSubs.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
+  const heroCtas = document.querySelectorAll('.cta-primary');
+  heroCtas.forEach(h => h.style.display = h.getAttribute('lang') === LANG ? '' : 'none');
+  renderAll();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// ─── QUIZ CHECK ─────────────────────────────
+function checkQuiz(chNum) {
+  const d = DATA[LANG];
+  const ch = d.chapters.find(c => c.num === chNum);
+  if (!ch || !ch.qa) return;
+  const resultEl = document.getElementById(`result${chNum}`);
+  const blanks = document.querySelectorAll(`.feynman-blank[data-ch="${chNum}"]`);
+  let correct = 0;
+  blanks.forEach((b, i) => {
+    const userAnswer = b.textContent.trim().toLowerCase();
+    const expected = ch.qa[i].toLowerCase();
+    if (userAnswer && expected.includes(userAnswer)) {
+      b.classList.add('filled');
+      correct++;
+    }
+  });
+  resultEl.className = 'feynman-result show';
+  const total = ch.qa.length;
+  if (correct === total) {
+    resultEl.className += ' correct';
+    resultEl.textContent = LANG==='zh' ? `🎉 全部正确！你真正理解了这一章。` : `🎉 All correct! You truly understand this chapter.`;
+  } else if (correct >= total/2) {
+    resultEl.className += ' partial';
+    resultEl.textContent = LANG==='zh' ? `👍 ${correct}/${total} 正确，差不多了，再读一遍关键节点？` : `👍 ${correct}/${total} correct. Close! Review the key facts?`;
+  } else {
+    resultEl.className += ' partial';
+    resultEl.textContent = LANG==='zh' ? `📖 ${correct}/${total} 正确——别担心，费曼说：不能简单讲清楚就是没理解。回头看看关键节点再试一次。` : `📖 ${correct}/${total} correct. As Feynman said: if you can't explain it simply, you don't understand it. Review and try again.`;
+  }
+}
+
+// ─── TIMELINE ACTIVE TRACKING ───────────────
+function updateTimelineActive() {
+  const dots = document.querySelectorAll('.timeline-dot');
+  let activeCh = 1;
+  const chapters = document.querySelectorAll('.chapter');
+  chapters.forEach(ch => {
+    const rect = ch.getBoundingClientRect();
+    if (rect.top < window.innerHeight/2) {
+      activeCh = parseInt(ch.id.replace('ch',''));
+    }
+  });
+  dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.ch) === activeCh));
+}
+
+// ─── SCROLL ─────────────────────────────────
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  const currentScroll = window.pageYOffset;
+  if (currentScroll > lastScroll && currentScroll > 200) {
+    nav.classList.add('hidden');
+  } else {
+    nav.classList.remove('hidden');
+  }
+  lastScroll = currentScroll;
+  updateTimelineActive();
+});
+
+// ─── INIT ───────────────────────────────────
+renderAll();
+updateTimelineActive();
+</script>
+</body>
+</html>
