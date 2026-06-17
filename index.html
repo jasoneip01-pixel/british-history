@@ -98,9 +98,11 @@ body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xm
 .feynman-result{display:none;font-size:0.8rem;margin-top:0.5rem;padding:0.5rem 0.75rem;border-radius:6px}
 .feynman-result.show{display:block}
 .feynman-result.correct{background:rgba(34,197,94,0.1);color:#15803d}
-/* ── CHAPTER IMAGES ── */
+/* ── PERFORMANCE ── */
+.chapter{content-visibility:auto;contain-intrinsic-size:800px}.chapter-hero{content-visibility:auto}
 .chapter-hero{width:100%;height:auto;max-height:50vh;object-fit:cover;border-radius:8px;margin-bottom:2rem;box-shadow:0 4px 20px rgba(0,0,0,0.08);opacity:0;transform:translateY(10px);transition:opacity .6s,transform .6s}
 .chapter-hero.loaded{opacity:1;transform:translateY(0)}
+.chapter-hero{background:rgba(27,42,74,0.04);background-size:cover;background-position:center}
 .chapter-illustration{display:block;max-width:100%;height:auto;max-height:400px;margin:1.5rem auto;border-radius:8px;box-shadow:0 3px 16px rgba(0,0,0,0.06)}
 .illustration-caption{text-align:center;font-size:0.75rem;color:var(--text-light);margin-top:0.5rem;font-style:italic}
 .feynman-result.partial{background:rgba(234,179,8,0.1);color:#a16207}
@@ -486,7 +488,7 @@ function renderAll() {
       </div>` : '';
     html += `
       <section class="chapter" id="ch${ch.num}">
-        <img class="chapter-hero" src="img/headers/ch${ch.num}.jpg" alt="${ch.title}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
+        <img class="chapter-hero" src="img/headers/ch${ch.num}.webp" alt="${ch.title}" width="1600" height="900" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.display='none'">
         <div class="chapter-num">${String(ch.num).padStart(2,'0')}</div>
         <div class="chapter-header">
           <div class="chapter-tag">${ch.tag}</div>
@@ -494,7 +496,7 @@ function renderAll() {
         </div>
         <div class="chapter-question">💡 ${ch.q}</div>
         <div class="chapter-body">${ch.body}</div>
-        <img class="chapter-illustration" src="img/illustrations/${ILLUSTRATIONS[ch.num]}" alt="${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}" loading="lazy" onerror="this.style.display='none'">
+        <img class="chapter-illustration" src="img/illustrations/${ILLUSTRATIONS[ch.num].replace('.jpg','.webp')}" alt="${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}" width="1200" height="900" loading="lazy" onerror="this.style.display='none'">
         <div class="illustration-caption">${LANG==='zh'?ILLUS_CAPTIONS_ZH[ch.num]:ILLUS_CAPTIONS_EN[ch.num]}</div>
         ${factsHtml ? `<div class="key-facts"><h4>${LANG==='zh'?'关键节点':'Key Facts'}</h4><ul>${factsHtml}</ul></div>` : ''}
         ${charHtml}
