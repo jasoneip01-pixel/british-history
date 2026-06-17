@@ -635,7 +635,7 @@ function toggleLang() {
 }
 function applyLang() {
   document.getElementById('langToggle').textContent = LANG === 'zh' ? 'EN' : '中';
-  document.querySelectorAll('[lang]').forEach(el => {
+  document.querySelectorAll('[lang]:not(html)').forEach(el => {
     el.style.display = el.getAttribute('lang') === LANG ? '' : 'none';
   });
 }
